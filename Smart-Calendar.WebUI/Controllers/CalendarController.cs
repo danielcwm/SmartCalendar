@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Smart_Calendar.Application.Repositories;
 using Smart_Calendar.Domain.Entities;
 using System;

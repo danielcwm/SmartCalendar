@@ -12,6 +12,7 @@ class ModalUI extends Component {
         this.setState({ open: false });
         this.props.header === "Delete Staff" ? this.props.deleteUser() : null;
         this.props.header === "Add User Info" ? this.props.addUserInfo() : null;
+
     };
 
     cancel = () => {
