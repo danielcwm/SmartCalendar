@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Smart_Calendar.Application.Repositories;
 using Smart_Calendar.Domain.Entities;
 using System;
@@ -21,7 +22,8 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetUserList()
         {
-            return Ok(await _userRepo.GetAllAsync());
+            var d = await _userRepo.Get(w => w.AccountId != null).Include(v => v.Department).ToListAsync();
+            return Ok( d);
         }
         // GET api/values
         [HttpGet("User/{id}")]

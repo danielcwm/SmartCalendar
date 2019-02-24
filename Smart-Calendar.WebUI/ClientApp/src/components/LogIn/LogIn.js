@@ -1,36 +1,101 @@
 import React, { Component } from "react";
-import {Button, Modal,Form} from 'semantic-ui-react';
+import { Button, Modal, Form } from 'semantic-ui-react';
+import axios from "axios";
+import Validation from '../Validation/Validation';
 
 
 class LogIn extends Component {
   constructor(props){
-    super(props);
+      super(props);
+      //validation object
+      this.validator = new Validation([
+          {
+              field: 'email',
+              method: 'isEmpty',
+              validWhen: false,
+              message: 'Email is required.'
+          },
+          {
+              field: 'email',
+              method: 'isEmail',
+              validWhen: true,
+              message: 'That is not a valid email.'
+          },
+          {
+              field: 'password',
+              method: 'isEmpty',
+              validWhen: false,
+              message: 'Password is required.'
+          }
+      ]);
+
     this.state={
-      modalOpen: false
-    };
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handlesignupopen = this.handlesignupopen.bind(this);
+        modalOpen: false,
+        email: '',
+        password: '',
+        validator: this.validator.valid(),
+      };
+      this.submitted = false;
   }
-   // state = { modalOpen: false }
 
-   handleOpen(){
+   handleOpen = () => {
      this.props.login(true);
-     //this.setState({ modalOpen: true });
-
     }
   
-  handleClose(){
-    //this.setState({ modalOpen: false });
-    this.props.login(false);
+  handleClose = (e) => {
+   
+      e.preventDefault();
+      let logindata = {
+          Email: this.state.email,
+          Password: this.state.password
+      }
+      const valid = this.validator.validate(this.state);
+      this.setState({ valid });
+      this.submitted = true;
+
+      if (valid.isValid) {
+          // handle actual form submission here
+     
+      console.log(logindata);
+      axios({
+          method:'post',
+          url: 'https://localhost:44314/api/Account/Login',
+          data: logindata
+      }).then(function (res) {
+          console.log("Added");
+          console.log(res);
+          debugger
+          if (res.status == 200) {
+              alert("Login Successful");
+          }
+          else {
+              alert("Unathorized Access");
+          }
+      });
+          this.props.login(false); 
+      }
   }
 
-  handlesignupopen(){
+    handlesignupopen = () => {
     this.props.login(false);
     this.props.signUp(true);
   }
-  render() {
-    return (
+  handleemail = (e) => {
+        this.setState({
+            email: e.target.value
+        }, () => { console.log(this.state.email);});
+    }
+    handlepassword = (e) => {
+        this.setState({
+            password: e.target.value
+        }, () => { console.log(this.state.password); });
+    }
+
+    render() {
+        let validation = this.submitted ?                         // if the form has been submitted at least once
+            this.validator.validate(this.state) :   // then check validity every time we render
+            this.state.validation  
+      return (
       <div>
          
         <Modal
@@ -42,14 +107,14 @@ class LogIn extends Component {
         <Modal.Content>
         <Form>
         <Form.Field>
-        <input placeholder='Email Address' />
-        </Form.Field>
+        <input placeholder='Email Address' onChange={this.handleemail} />
+        </Form.Field >
         <Form.Field>
-        <input placeholder='Passowrd' />
+        <input type="password" placeholder='Passowrd' onChange={this.handlepassword} />
         </Form.Field>
         <Form.Field>
         <Button onClick={this.handleClose} inverted type="submit" className="fluid ui blue button">
-            Log In</Button>
+        Log In</Button>
         </Form.Field>
         </Form>
         </Modal.Content>

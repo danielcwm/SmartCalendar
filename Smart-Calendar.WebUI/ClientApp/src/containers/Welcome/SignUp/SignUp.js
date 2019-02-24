@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import {Button, Modal,Form} from 'semantic-ui-react';
+import { Button, Modal, Form } from 'semantic-ui-react';
+import axios from 'axios';
 
 
 class SignUp extends Component {
   constructor(props){
     super(props);
     this.state={
-      modalOpen: false
+        modalOpen: false,
+        email: '',
+        password: ''
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -14,24 +17,48 @@ class SignUp extends Component {
   }
    // state = { modalOpen: false }
 
-   handleOpen(){
+   handleOpen = () => {
      //this.setState({ modalOpen: true });
      this.props.signup(true);
     }
   
-  handleClose(){
+  handleClose = () => {
    // this.setState({ modalOpen: false });
+      let signupdata = {
+          email: this.state.email,
+          password: this.state.password,
+          roleId: 1
+      }
+      console.log(signupdata);
+      axios({
+          method: 'post',
+          url: 'https://localhost:44314/api/Account/Register',
+          data: signupdata
+      }).then(function (res) {
+          console.log("Added");
+          console.log(res);
+      });
+
    this.props.signup(false);
   }
 
-  handleloginopen(){
+  handleloginopen = () => {
     this.props.signup(false);
     this.props.login(true);
-  }
+    }
+    handleemail = (e) => {
+        this.setState({
+            email: e.target.value
+        });
+    }
+    handlepassword = (e) => {
+        this.setState({
+            password: e.target.value
+        });
+    }
   render() {
     return (
       <div>
-         
         <Modal
         trigger={<Button inverted color='blue' onClick={this.handleOpen}>Sign Up</Button>}
         open={this.props.signupstate}
@@ -46,13 +73,13 @@ class SignUp extends Component {
         <input placeholder='Last Name' />
         </Form.Field>
         <Form.Field>
-        <input placeholder='Email Address' />
+        <input type='email' placeholder='Email Address' onChange={this.handleemail}/>
         </Form.Field>
         <Form.Field>
-        <input placeholder='Passowrd' />
+        <input type='password' placeholder='Passowrd' onChange={this.handlepassword} />
         </Form.Field>
         <Form.Field>
-        <input placeholder='Confirm Passowrd' />
+        <input type = 'password' placeholder='Confirm Passowrd' />
         </Form.Field>
         <Form.Field>
         <Button onClick={this.handleClose} inverted type="submit" className="fluid ui blue button">
