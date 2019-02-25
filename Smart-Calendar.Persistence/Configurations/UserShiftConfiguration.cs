@@ -9,7 +9,8 @@ namespace Smart_Calendar.Persistence.Configurations
         public void Configure(EntityTypeBuilder<UserShift> builder)
         {
             builder.HasOne(s => s.Shift).WithMany(uf => uf.UserShift).HasForeignKey(fk => fk.ShiftId);
-            builder.HasOne(s => s.User).WithMany(uf => uf.UserShift).HasForeignKey(fk => fk.UserId);
+            builder.HasOne(s => s.User).WithMany(uf => uf.UserShift).HasForeignKey(fk => fk.UserId).OnDelete(DeleteBehavior.Cascade);
+           
         }
 
     }

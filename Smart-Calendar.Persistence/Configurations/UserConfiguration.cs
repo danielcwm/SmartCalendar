@@ -8,7 +8,7 @@ namespace Smart_Calendar.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasOne(a => a.Account).WithOne(u => u.User).HasForeignKey<User>(fk => fk.AccountId);
+            builder.HasOne(a => a.Account).WithOne(u => u.User).HasForeignKey<User>(fk => fk.AccountId).OnDelete(DeleteBehavior.Cascade);
             builder.Property(u => u.FirstName).IsRequired();
             builder.Property(u => u.LastName).IsRequired();
             builder.Property(u => u.UserId).HasDefaultValueSql("NEWID()");

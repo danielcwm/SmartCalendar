@@ -40,6 +40,11 @@ namespace Smart_Calendar.Application.Repositories
         {
             return await _dbContext.Set<TEntity>().ToListAsync();
         }
+        public async Task<IQueryable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes)
+        {
+           return includes.Aggregate(_dbContext.Set<TEntity>().AsQueryable(),
+                          (current, include) => current.Include(include));
+        }
         public async Task<bool> UpdateAsync(TEntity entity)
         {
             try

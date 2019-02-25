@@ -17,5 +17,7 @@ namespace Smart_Calendar.Application.Repositories
         Task<bool> UpdateAsync(TEntity entity);
 
         Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<IQueryable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes);
+
     }
 }
