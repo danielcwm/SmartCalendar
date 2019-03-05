@@ -30,7 +30,8 @@ namespace Smart_Calendar.Application.Services
             await _accountRepo.CreateAsync(account);
             return new TokenResponseDto
             {
-                Token = _jwtHelper.GenerateToken(registerDto.Email)
+                Token = _jwtHelper.GenerateToken(registerDto.Email),
+                Code = System.Net.HttpStatusCode.OK
             };
         }
         public async Task<TokenResponseDto> LoginAsync(LoginDto credential)

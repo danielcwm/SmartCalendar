@@ -26,7 +26,6 @@ class StaffTable extends Component {
             .catch(error => {
                 console.log(error);
             });
-
         axios.get("https://localhost:44314/api/calendar/account")
             .then(response => {
                 this.setState({ accounts: response.data });
@@ -118,7 +117,6 @@ class StaffTable extends Component {
                         ))}
                     </Table.Body>
 
-    }
                     {/* <Table.Footer>
             <Table.Row>
               <Table.HeaderCell>Total</Table.HeaderCell>

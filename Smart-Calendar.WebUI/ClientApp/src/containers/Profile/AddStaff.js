@@ -1,57 +1,54 @@
 import React, { Component } from "react";
 import { Form, Input, Select } from "semantic-ui-react";
+import './AddStaff.css';
+const roleOptions = [
+    { key: 'a', text: 'Admin', value: '1' },
+    { key: 'm', text: 'Member', value: '2' }
+]
 
 class AddStaff extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
             <div>
                 <Form>
                     <Form.Group widths="equal">
-                        <Form.Field control={Input} label="Email" placeholder="Email" />
+                        <Form.Field
+                            control={Input}
+                            label="Email"
+                            name="email"
+                            placeholder="Email"
+                            onChange={this.props.onFormChange}
+                        />
                         <Form.Field
                             control={Input}
                             label="Password"
+                            type="password"
+                            name='password'
                             placeholder="Password"
-                        />
-                    </Form.Group>
-                    <Form.Group widths="equal">
-                        <Form.Field
-                            control={Input}
-                            label="First name"
-                            placeholder="First Name"
-                        />
-                        <Form.Field
-                            control={Input}
-                            label="Last name"
-                            placeholder="Last Name"
-                        />
-                        <Form.Field
-                            control={Select}
-                            label="Gender"
-                            // options={Male, Female}
-                            placeholder="Gender"
-                        />
-                    </Form.Group>
-                    <Form.Group widths="equal">
+                            onChange={this.props.onFormChange} />
                         <Form.Field
                             control={Select}
                             label="Role"
-                            // options={Admin or General Staff}
+                            name='role'
+                            options={roleOptions}
                             placeholder="Role Name"
-                        />
-                        <Form.Field
-                            control={Select}
-                            label="Department"
-                            //options={Departments}
-                            placeholder="Department Name"
-                        />
-                        <Form.Field
-                            control={Select}
-                            label="Position"
-                            // options={Positions} this option list is based on the selected department
-                            placeholder="Position Name"
+                            onChange={this.props.onFormChange}
                         />
                     </Form.Group>
+                    <Form.Group widths="equal">
+                        <Form.Field className='errorMsg'>
+                            {this.props.emailerror}
+                        </Form.Field>
+                        <Form.Field className='errorMsg'>
+                            {this.props.pwderror}
+                        </Form.Field>
+                        <Form.Field className='errorMsg'>
+                            {this.props.roleerror}
+                        </Form.Field>
+                        </Form.Group>
                 </Form>
             </div>
         );

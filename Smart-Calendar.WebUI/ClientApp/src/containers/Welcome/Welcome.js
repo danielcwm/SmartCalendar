@@ -48,10 +48,12 @@ class Welcome extends Component {
             <div className="tagline-holder">
             <h1>Welcome to Smart-Calender</h1>
             <h2>A Smart Employee Management System</h2>
-            <Image src={banner} fluid/>
             </div>
             </Grid.Row>
-            <Footer />
+            <Grid.Row><Image src={banner} fluid /></Grid.Row>
+            <Grid.Row>
+                <Footer />
+            </Grid.Row>
                   
       </div>
     );

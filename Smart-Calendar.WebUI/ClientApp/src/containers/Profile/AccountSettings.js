@@ -15,27 +15,12 @@ class AccountSettings extends Component {
         phoneNumber:''
     }
     
-    handleRole = (e, { value}) => {
-        console.log("select role");
-        //this.setstate({
-        //    role: value
-        //});
-    }
-    handleEmail = (e) => {
+    handleAccountInfo = (e, {name,value}) => {
         this.setState({
-            email: e.target.value
-        }, () => { console.log(this.state.email); });
+            [name]:value
+        }, () => { console.log(this.state);});
     }
-    handlePassword = (e) => {
-        this.setState({
-            password: e.target.value
-        }, () => { console.log(this.state.password); });
-    }
-    handleNumber = (e) => {
-        this.setState({
-            phoneNumber: e.target.value
-        }, () => { console.log(this.state.phoneNumber); });
-    }
+   
   render() {
     return (
       <div>
@@ -53,32 +38,36 @@ class AccountSettings extends Component {
             />
             <Form.Field
                 control={Select}
+                name= "role"
                 label="Role"
                 placeholder="Select Role"
                 options={roles}
-                onClick={this.handleRole.bind(this)}
+                onChange={this.handleAccountInfo}
             />
           </Form.Group>
           <Form.Group widths="equal">
             <Form.Field
-                        control={Input}
-                        type='email'
-                        label="Email"
-                        placeholder="Email"
-                        onChange={this.handleEmail}
+                control={Input}
+                type='email'
+                label="Email"
+                placeholder="Email"
+                name="email"
+                onChange={this.handleAccountInfo}
             />
             <Form.Field
-                        control={Input}
-                        type='password'
-                        label="Password"
-                        placeholder="Password"
-                        onChange={this.handlePassword}
+                control={Input}
+                type='password'
+                label="Password"
+                name="password"
+                placeholder="Password"
+                onChange={this.handleAccountInfo}
             />
             <Form.Field
-                        control={Input}
-                        label="Phone Number"
-                        placeholder="Phone Number"
-                        onChange={this.handleNumber}
+                control={Input}
+                label="Phone Number"
+                name="phoneNumber"
+                placeholder="Phone Number"
+                onChange={this.handleAccountInfo}
             />
           </Form.Group>
         </Form>

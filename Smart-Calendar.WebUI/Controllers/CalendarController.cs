@@ -28,9 +28,25 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetUserList()
         {
-            return Ok(await _userRepo.GetAllAsync());
+            var results = await _userRepo.GetAllAsync(c => c.Department, c => c.Position);
+
+            var userList = new List<UserVM>();
+            foreach (var user in results)
+            {
+                var userShiftResults = _userShiftRepo.Get(u => u.UserId == user.UserId);
+                var userShifts = new List<UserShiftVM>();
+                foreach (var userShift in userShiftResults)
+                {
+                    Shift shiftResult = _shiftRepo.Get(s => s.ShiftId == userShift.ShiftId).FirstOrDefault();
+                    var shift = new ShiftVM { ShiftId = shiftResult.ShiftId, StartTime = shiftResult.StartTime, EndTime = shiftResult.EndTime };
+                    userShifts.Add(new UserShiftVM { UserShiftId = userShift.UserShiftId, Day = userShift.Day, ShiftId = userShift.ShiftId, Shift = shift });
+                }
+                userList.Add(new UserVM { Id = user.UserId, AccountId = user.AccountId, FirstName = user.FirstName, LastName = user.LastName, Gender = user.Gender, Department = user.Department.Name, Position = user.Position.Name, UserShifts = userShifts });
+            }
+            return Ok(userList);
         }
-        // GET api/values
+
+
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetUserInfo(Guid id)
         {
@@ -45,9 +61,9 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpPost("User")]
         public async Task<IActionResult> AddUserInfo([FromBody]User user)
         {
-           
+
             await _userRepo.CreateAsync(user);
-            var usersInDb = await GetUserList(); 
+            var usersInDb = await GetUserList();
             return Ok(usersInDb);
         }
 
@@ -65,7 +81,7 @@ namespace Smart_Calendar.WebUI.Controllers
         }
     }
 
-   public class UserVM
+    public class UserVM
     {
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }

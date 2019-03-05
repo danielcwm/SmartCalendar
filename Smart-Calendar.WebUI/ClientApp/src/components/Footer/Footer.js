@@ -3,8 +3,8 @@ import {Grid} from 'semantic-ui-react';
 
 
 const Footer = () =>(
-    <Grid columns={3}>
-    <Grid.Row>
+    <Grid columns= 'equal'>
+   
         <Grid.Column>
             <h3 align="left">@Copyright by SmartCalender</h3>
             {/* <h3 align= "right">About</h3>
@@ -16,7 +16,7 @@ const Footer = () =>(
         <Grid.Column >
             <h3 align= "right">Contact Us</h3>
         </Grid.Column>
-    </Grid.Row>
+    
     </Grid>
 
 );
