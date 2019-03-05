@@ -51,16 +51,5 @@ namespace Smart_Calendar.WebUI.Controllers
             //return Ok(new { jwtToken = result.Token });
            
         }
-        //[HttpGet("user")]
-        //public async Task<IActionResult> GetUser(string email)
-        //{
-        //    var user = _accountRepo.Get(d => d.Email == email).SingleOrDefault();
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Ok(user.AccountId);
-
-        //}
     }
 }

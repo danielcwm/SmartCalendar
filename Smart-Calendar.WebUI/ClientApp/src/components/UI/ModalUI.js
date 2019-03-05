@@ -10,13 +10,8 @@ class ModalUI extends Component {
 
     close = () => {
         console.log(this.props.formvalid);
-
-        //debugger
-      
-        //this.props.header === "Delete Staff" ? this.props.deleteUser() : null;
-        //this.props.header === "Add User Info" ? this.props.addUserInfo() : null;
         this.props.header === 'Create New Account' ? this.props.validateForm() : null;
-        debugger
+        
         if (this.props.formvalid) { 
             //this.setState({ open: false });
 
