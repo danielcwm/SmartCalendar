@@ -17,6 +17,7 @@ class AddStaff extends Component {
                     <Form.Group widths="equal">
                         <Form.Field
                             control={Input}
+
                             label="Email"
                             name="email"
                             placeholder="Email"
@@ -29,6 +30,7 @@ class AddStaff extends Component {
                             name='password'
                             placeholder="Password"
                             onChange={this.props.onFormChange} />
+
                         <Form.Field
                             control={Select}
                             label="Role"

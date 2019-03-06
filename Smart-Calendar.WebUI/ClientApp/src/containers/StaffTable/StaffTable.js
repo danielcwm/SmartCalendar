@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Table, Loader, ButtonGroup } from "semantic-ui-react";
 import TableRow from "../../components/Table/TableRow/TableRow";
 import ModalUI from "../../components/UI/ModalUI";
-import AddShift from "../../components/Shift/AddShift/AddShift";
+import AddUserInfo from "../../components/UserInfo/AddUserInfo/AddUserInfo";
 import axios from "axios";
 
 class StaffTable extends Component {
@@ -14,7 +14,8 @@ class StaffTable extends Component {
         lastName: "",
         selectedGender: "",
         selectedDept: "",
-        selectedPos: ""
+        selectedPos: "",
+        updatedUser: null
     };
 
     componentDidMount() {
@@ -35,7 +36,6 @@ class StaffTable extends Component {
     }
 
     onFormChange = (e, { name, value }) => {
-
         this.setState({ [name]: value });
     };
 
@@ -66,6 +66,34 @@ class StaffTable extends Component {
                 console.log(error);
             });
     };
+
+    getUpdatedUser = (updatedUser) => {
+        this.setState({ updatedUser: updatedUser });
+    }
+
+    editUserInfo = (updatedUser) => {
+        axios
+            .put("https://localhost:44314/api/calendar/user/" + updatedUser.userId, updatedUser)
+            .then(response => {
+                this.setState({ users: response.data.value });
+            }).catch(error => {
+                console.log(error);
+            });
+
+        axios
+            .delete("https://localhost:44314/api/calendar/userShifts/" + updatedUser.userId)
+            .then(response => {
+                axios.post("https://localhost:44314/api/calendar/userShifts/" + updatedUser.userId, updatedUser.userShifts)
+                    .then(response => {
+                    //console.log(response.data.value);
+                    this.setState({ users: response.data.value });
+                }).catch(error => {
+                    console.log(error);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+    }
 
     render() {
         let table = <Loader active inline="centered" size="massive" />;
@@ -99,7 +127,7 @@ class StaffTable extends Component {
                                 <h3>Action
                                    <ButtonGroup>
                                         <ModalUI icon="add" header="Add User Info" addUserInfo={this.addUserInfo} >
-                                            <AddShift accounts={availableAccounts} onFormChange={this.onFormChange} />
+                                            <AddUserInfo accounts={availableAccounts} onFormChange={this.onFormChange} />
                                         </ModalUI>
                                     </ButtonGroup>
                                 </h3>
@@ -110,9 +138,13 @@ class StaffTable extends Component {
                     <Table.Body>
                         {this.state.users.map(user => (
                             <TableRow
+                                showForm={this.state.showForm}
                                 key={user.id}
                                 user={user}
                                 deleteUserInfo={() => this.deleteUserInfo(user.id)}
+                                onFormChange={this.onFormChange}
+                                getUpdatedUser={this.getUpdatedUser}
+                                editUserInfo={() => this.editUserInfo(this.state.updatedUser)}
                             />
                         ))}
                     </Table.Body>

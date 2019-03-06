@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
-import { Menu, Icon, Header, Input, Dropdown, Button } from "semantic-ui-react";
+import { Menu, Icon, Header, Input, Button } from "semantic-ui-react";
 import ModalUI from "../../components/UI/ModalUI";
 import DropdownUI from "../../components/UI/DropdownUI";
 import AddStaff from "../Profile/AddStaff";
@@ -11,7 +11,8 @@ import axios from "axios";
 
 
 export default class Menubar extends Component {
-  handleItemClick = () => {};
+    handleItemClick = () => { };
+
 
   handleChange = e => {
     e.preventDefault();
@@ -112,39 +113,40 @@ export default class Menubar extends Component {
         });
        // console.log(this.state.formvalid);
        // console.log(formisvalid);
-    }
+    }    
 
-  render() {
-    const today = moment().format("DD MMMM YYYY, dddd");
-    const currentWeek = moment().weeks();
-    return (
-      <Menu secondary>
-        <Menu.Item>
-          <Header as="h1" size="large">
-            <Icon name="calendar alternate outline" />
-            <Header.Content>
-              Smart Calendar
+    render() {
+        const today = moment().format("DD MMMM YYYY, dddd");
+        const currentWeek = moment().weeks();
+        return (
+            <Menu secondary>
+                <Menu.Item>
+                    <Header as="h1" size="large">
+                        <Icon name="calendar alternate outline" />
+                        <Header.Content>
+                            Smart Calendar
               <Header.Subheader>
-                The Next Generation HR Management System
+                                The Next Generation HR Management System
               </Header.Subheader>
-            </Header.Content>
-          </Header>
-        </Menu.Item>
-        <Menu.Item style={{ margin: "auto" }}>
-          <h3>
-            Current Week: {currentWeek} <br /> 
-            {today}
-          </h3>
-        </Menu.Item>
-        <Menu.Item position="right">
-          <Menu compact secondary>
-            <Menu.Item>
-              <Input
-                icon="users"
-                iconPosition="left"
-                placeholder="Search Staff..."
-              />
-            </Menu.Item>
+                        </Header.Content>
+                    </Header>
+                </Menu.Item>
+                <Menu.Item style={{ margin: "auto" }}>
+                    <h3>
+                        Current Week: {currentWeek} <br />
+                        {today}
+                    </h3>
+                </Menu.Item>
+                <Menu.Item position="right">
+                    <Menu compact secondary>
+                        <Menu.Item>
+                            <Input
+                                icon="users"
+                                iconPosition="left"
+                                placeholder="Search Staff..."
+                            />
+                        </Menu.Item>
+
 
             <Menu.Item>
               <Button.Group>
@@ -185,4 +187,5 @@ export default class Menubar extends Component {
       </Menu>
     );
   }
+
 }

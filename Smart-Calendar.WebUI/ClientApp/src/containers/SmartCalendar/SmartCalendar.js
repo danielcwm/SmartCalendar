@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Divider, Header, Container } from "semantic-ui-react";
+import { Divider, Container } from "semantic-ui-react";
 import Menubar from "../MenuBar/MenuBar";
 
 class SmartCalender extends Component {

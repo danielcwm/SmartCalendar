@@ -27,6 +27,7 @@ class ModalUI extends Component {
             }
             this.setState({ open: false });
         }
+
     };
 
     cancel = () => {
@@ -57,7 +58,7 @@ class ModalUI extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button onClick={this.cancel} negative>
-                        Cancel</Button>
+                        Cancel</Button> 
                         <Button
                         positive
                         icon="checkmark"
