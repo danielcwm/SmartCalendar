@@ -8,7 +8,7 @@ namespace Smart_Calendar.Domain.Entities
         public Guid UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public char Gender { get; set; }
+        public string Gender { get; set; }
 
         public Guid AccountId { get; set; }
         public int DepartmentId { get; set; }

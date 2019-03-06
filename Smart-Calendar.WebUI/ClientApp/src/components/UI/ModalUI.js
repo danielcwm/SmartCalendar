@@ -9,24 +9,10 @@ class ModalUI extends Component {
     };
 
     close = () => {
-        console.log(this.props.formvalid);
-        this.props.header === 'Create New Account' ? this.props.validateForm() : null;
-        
-        if (this.props.formvalid) { 
-            //this.setState({ open: false });
+        this.setState({ open: false });
+        this.props.header === "Delete Staff" ? this.props.deleteUser() : null;
+        this.props.header === "Add User Info" ? this.props.addUserInfo() : null;
 
-            switch (this.props.header) {
-                case "Delete Staff":
-                    return this.props.deleteUser();
-                case "Add User Info":
-                    return this.props.addUserInfo();
-                case "Create New Account":
-                    return this.props.addStaffInfo();
-                default:
-                    return null;
-            }
-            this.setState({ open: false });
-        }
     };
 
     cancel = () => {
@@ -57,7 +43,8 @@ class ModalUI extends Component {
                     </Modal.Content>
                     <Modal.Actions>
                         <Button onClick={this.cancel} negative>
-                        Cancel</Button>
+                            Cancel
+            </Button>
                         <Button
                         positive
                         icon="checkmark"

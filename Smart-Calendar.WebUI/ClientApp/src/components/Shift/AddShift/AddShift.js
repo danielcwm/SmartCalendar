@@ -1,79 +1,70 @@
-import React from "react";
-import { Form, Select, Input } from "semantic-ui-react";
+import React, { Component } from "react";
+import { Select, List, Button, Icon } from "semantic-ui-react";
 
 
-const AddShift = props => {
-    const genderOptions = [
-        { key: 'm', text: 'Male', value: 'm' },
-        { key: 'f', text: 'Female', value: 'f' }
-    ];
-    const deptOptions = [
-        { key: 'it', text: 'IT', value: '1' },
-        { key: 'marketing', text: 'Marketing', value: '2' },
-        { key: 'accounting', text: 'Accounting', value: '3' }
-    ];
-    const posOptions = [
-        { key: 'manager', text: 'Manager', value: '1' },
-        { key: 'lead', text: 'Lead', value: '2' },
-        { key: 'member', text: 'Member', value: '3' }
-    ];
-    return (
-        <div>
-            <Form>
-                <Form.Group widths="equal">
-                    <Form.Field
-                        control={Select}
-                        name="selectedAccountId"
-                        label="Staff Email"
-                        options={props.accounts.map(acc => ({ key: acc.accountId, text: acc.email, value: acc.accountId }))}
-                        placeholder="Select a staff"
-                        onChange={props.onFormChange}
-                    />
-                    <Form.Field
-                        control={Input}
-                        name="firstName"
-                        label="First name"
-                        placeholder="First Name"
-                        onChange={props.onFormChange}
-                    />
-                    <Form.Field
-                        control={Input}
-                        name="lastName"
-                        label="Last name"
-                        placeholder="Last Name"
-                        onChange={props.onFormChange}
-                    />
-                </Form.Group>
-                <Form.Group widths="equal">
-                    <Form.Field
-                        control={Select}
-                        name="selectedGender"
-                        label="Gender"
-                        options={genderOptions}
-                        placeholder="Gender"
-                        onChange={props.onFormChange}
-                    />
-                    <Form.Field
-                        control={Select}
-                        name="selectedDept"
-                        label="Department"
-                        options={deptOptions}
-                        placeholder="Department Name"
-                        onChange={props.onFormChange}
-                    />
-                    <Form.Field
-                        control={Select}
-                        name="selectedPos"
-                        label="Position"
-                        options={posOptions}
-                        placeholder="Position Name"
-                        onChange={props.onFormChange}
-                    />
-                </Form.Group>
-                
-            </Form>
-        </div>
-    );
-};
+class AddShift extends Component {
+    state = {
+        showForm: false,
+        day: '',
+        shiftId: '',
+        error: false
+    }
+
+    onAddBtnClick = () => {
+        this.setState({ showForm: true });
+    }
+
+    addShift = () => {
+
+        if (!this.state.day || !this.state.shiftId) {
+            this.setState({ showForm: true, error: true });
+        } else {
+            let newUserShift = {
+                userId: this.props.userId,
+                day: this.state.day,
+                shiftId: this.state.shiftId
+            };
+            this.props.getAddedShift(newUserShift);
+            this.setState({
+                showForm: false, day: '', shiftId: '', error: false });
+        }
+    }
+
+    onCloseBtnClick = () => {
+        this.setState({ showForm: false, error: false, day: '', shiftId: '' });
+    }
+
+    onSelectChange = (e, { name, value }) => {
+        this.setState({ [name]: value, error: false });
+    };
+
+    render() {
+        const dayOptions = [
+            { key: '1', text: 'Monday', value: 'Monday' },
+            { key: '2', text: 'Tuesday', value: 'Tuesday' },
+            { key: '3', text: 'Wednesday', value: 'Wednesday' },
+            { key: '4', text: 'Thursday', value: 'Thursday' },
+            { key: '5', text: 'Friday', value: 'Friday' }
+        ];
+        let availableDays = dayOptions.filter(day => this.props.userShifts.every(userShift => userShift.day !== day.value));
+        let addButton = this.props.userShifts.length < 5 && <Icon name="add" size="large" onClick={this.onAddBtnClick} />;
+        return (
+            <React.Fragment>
+                <List.Header>
+                    {!this.state.showForm ?
+                        addButton :
+                        <React.Fragment>
+                            <Select name="day" options={availableDays} placeholder="Select a day" onChange={this.onSelectChange} error={this.state.error} />
+                            <Select name="shiftId" options={this.props.timeOptions} placeholder="Select a time slot" onChange={this.onSelectChange} error={this.state.error} />
+                            <Button.Group>
+                                <Button circular basic size="large" icon='check' onClick={this.addShift} />
+                                <Button circular basic size="large" icon='times' onClick={this.onCloseBtnClick} />
+                            </Button.Group>
+                        </React.Fragment>}
+                </List.Header>
+            </React.Fragment>
+        );
+    }
+}
 
 export default AddShift;

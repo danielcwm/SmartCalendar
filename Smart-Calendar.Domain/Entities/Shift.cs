@@ -7,9 +7,7 @@ namespace Smart_Calendar.Domain.Entities
     {
         public int ShiftId { get; set; }
 
-        public DateTime StartTime { get; set; }
-
-        public DateTime EndTime { get; set; }
+        public string TimeSlot { get; set; }
 
         public ICollection<UserShift> UserShift { get; set; }
 

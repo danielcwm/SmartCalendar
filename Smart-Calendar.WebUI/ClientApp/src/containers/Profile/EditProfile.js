@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Select } from "semantic-ui-react";
+
 
 class EditProfile extends Component {
   render() {

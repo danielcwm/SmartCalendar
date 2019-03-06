@@ -17,18 +17,14 @@ class AddStaff extends Component {
                     <Form.Group widths="equal">
                         <Form.Field
                             control={Input}
-                            label="Email"
-                            name="email"
-                            placeholder="Email"
-                            onChange={this.props.onFormChange}
+                            label="Password"
+                            placeholder="Password"
                         />
                         <Form.Field
                             control={Input}
-                            label="Password"
-                            type="password"
-                            name='password'
-                            placeholder="Password"
-                            onChange={this.props.onFormChange} />
+                            label="First name"
+                            placeholder="First Name"
+                        />
                         <Form.Field
                             control={Select}
                             label="Role"

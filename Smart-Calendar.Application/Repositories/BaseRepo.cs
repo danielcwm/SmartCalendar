@@ -23,13 +23,14 @@ namespace Smart_Calendar.Application.Repositories
         }
         public async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            var entity = await _dbContext.Set<TEntity>().Where(predicate).FirstOrDefaultAsync();
+            var entity = await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+
             if (entity == null)
             {
                 return false;
             }
 
-            _dbContext.Set<TEntity>().Remove(entity);
+            _dbContext.Set<TEntity>().RemoveRange(entity);
             return await _dbContext.SaveChangesAsync() > 0;
         }
         public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
