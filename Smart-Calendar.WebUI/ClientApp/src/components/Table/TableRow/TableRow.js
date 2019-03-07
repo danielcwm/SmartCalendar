@@ -17,10 +17,10 @@ const TableRow = props => {
             </Table.Cell>
             <Table.Cell>
                 <ButtonGroup>
-                    <ModalUI icon="edit" header="Edit User Info" editUserInfo={props.editUserInfo}>
+                    <ModalUI icon="edit" header="Edit User Info" editUserInfo={props.editUserInfo} formvalid>
                         <EditUserInfo user={props.user} getUpdatedUser={props.getUpdatedUser}/>
                     </ModalUI>
-                    <ModalUI icon="remove user" header="Delete User Info" deleteUser={props.deleteUserInfo}>
+                    <ModalUI icon="remove user" header="Delete User Info" deleteUser={props.deleteUserInfo} formvalid>
                         <h3>Delete all information about {props.user.firstName} {props.user.lastName}?</h3>
                     </ModalUI>
                 </ButtonGroup>

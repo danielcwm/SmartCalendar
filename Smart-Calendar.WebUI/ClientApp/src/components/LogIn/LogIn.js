@@ -3,7 +3,6 @@ import { Button, Modal, Form } from 'semantic-ui-react';
 import axios from "axios";
 import Validation from '../Validation/Validation';
 
-
 class LogIn extends Component {
   constructor(props){
       super(props);
@@ -65,7 +64,7 @@ class LogIn extends Component {
           console.log("Added");
           console.log(res);
           debugger
-          if (res.status == 200) {
+          if (res.status === 200) {
               alert("Login Successful");
           }
           else {

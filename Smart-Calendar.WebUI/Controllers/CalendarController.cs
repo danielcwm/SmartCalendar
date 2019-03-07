@@ -31,7 +31,6 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetUserList()
         {
-            var results = await _userRepo.GetAllAsync(c => c.Department, c => c.Position );
 
             var results = await _userRepo.GetAllAsync(c => c.Department, c => c.Position, c => c.Account, c => c.UserShift);
 
