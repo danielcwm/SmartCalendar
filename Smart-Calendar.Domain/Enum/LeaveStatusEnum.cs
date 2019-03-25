@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Smart_Calendar.Domain.Enum
 {
-    public enum LeaveTypeEunm
+    public enum LeaveStatusEnum
     {
-        Sick =1,
-        Casual = 2
+        Pending =0,
+        Approved = 1,
+        Rejected = 2
     }
 }

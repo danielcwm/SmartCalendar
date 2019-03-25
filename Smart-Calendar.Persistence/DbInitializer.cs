@@ -17,10 +17,10 @@ namespace Smart_Calendar.Persistence
         {
             context.Database.EnsureCreated();
 
-            if (context.Accounts.Any())
-            {
-                return;
-            }
+            //if (context.Accounts.Any())
+            //{
+            //    return;
+            //}
             SeedRole(context);
             SeedDepartment(context);
             SeedPosition(context);
@@ -49,10 +49,10 @@ namespace Smart_Calendar.Persistence
         {
             var request = new[]
             {
-                new LeaveRequest {UserId= new Guid("43f0fdea-2b4c-4af7-8389-f442deccef73"), LeaveCategoryId= (int)LeaveTypeEunm.Sick, StartDate = DateTime.Parse("1 Feb, 2019"), EndDate= DateTime.Parse("2 Feb, 2019")},
-                new LeaveRequest { UserId= new Guid("cb20b05f-0f53-4eea-9b92-2a2ccbd7468b"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,StartDate = DateTime.Parse("4 Feb, 2019"), EndDate= DateTime.Parse("7 Feb, 2019")},
-                new LeaveRequest { UserId= new Guid("c45d233c-a3b4-42b1-a91a-0d044a35c0f2"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,StartDate = DateTime.Parse("5 Feb, 2019"), EndDate= DateTime.Parse("6 Feb, 2019")},
-                new LeaveRequest { UserId= new Guid("75840aef-451c-4f0e-ae80-bcd9d7897387"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,StartDate = DateTime.Parse("6 Feb, 2019"), EndDate= DateTime.Parse("9 Feb, 2019")},
+                new LeaveRequest {UserId= new Guid("43f0fdea-2b4c-4af7-8389-f442deccef73"), LeaveCategoryId= (int)LeaveTypeEunm.Sick, IsApproved = LeaveStatusEnum.Pending,StartDate = DateTime.Parse("1 Feb, 2019"), EndDate= DateTime.Parse("2 Feb, 2019")},
+                new LeaveRequest { UserId= new Guid("cb20b05f-0f53-4eea-9b92-2a2ccbd7468b"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,IsApproved = LeaveStatusEnum.Pending,StartDate = DateTime.Parse("4 Feb, 2019"), EndDate= DateTime.Parse("7 Feb, 2019")},
+                new LeaveRequest { UserId= new Guid("c45d233c-a3b4-42b1-a91a-0d044a35c0f2"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,IsApproved = LeaveStatusEnum.Pending,StartDate = DateTime.Parse("5 Feb, 2019"), EndDate= DateTime.Parse("6 Feb, 2019")},
+                new LeaveRequest { UserId= new Guid("75840aef-451c-4f0e-ae80-bcd9d7897387"), LeaveCategoryId= (int)LeaveTypeEunm.Sick,IsApproved = LeaveStatusEnum.Rejected,StartDate = DateTime.Parse("6 Feb, 2019"), EndDate= DateTime.Parse("9 Feb, 2019")},
             };
 
             context.LeaveRequests.AddRange(request);

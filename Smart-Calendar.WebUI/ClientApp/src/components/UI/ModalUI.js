@@ -10,9 +10,9 @@ class ModalUI extends Component {
 
     close = () => {
         
-        var formvalid = this.props.validateForm();
+        //var formvalid = this.props.validateForm();
         
-        if (formvalid) {
+        if (this.props.formvalid) {
             //this.setState({ open: false });
             this.setState({ open: false });
             switch (this.props.header) {
@@ -24,6 +24,12 @@ class ModalUI extends Component {
                     return this.props.editUserInfo();
                 case "Create New Account":
                     return this.props.addStaffInfo();
+                case "Delete Leave Record":
+                    return this.props.deleteLeaveInfo();
+                case "ApplyLeave":
+                    return this.props.addleaveInfo();
+                case "Leave Request List":
+                    return this.props.updateLeaveInfo();
                 default:
                     return null;
             }
