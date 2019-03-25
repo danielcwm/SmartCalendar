@@ -35,6 +35,10 @@ const addAccountInfo = (state, action) => {
     return { ...state, accounts: action.newAccounts };
 };
 
+const addAccountInfo = (state, action) => {
+    return { ...state, accounts: action.newAccounts };
+};
+
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_USERS:
