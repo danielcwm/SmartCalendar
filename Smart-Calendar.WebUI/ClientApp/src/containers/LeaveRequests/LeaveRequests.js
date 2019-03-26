@@ -121,7 +121,7 @@ class LeaveRequests extends Component {
                         <ButtonGroup>
                                     <ModalUI icon="add" header="ApplyLeave"
                                         formvalid
-                                        addleaveInfo={this.handleleaveInfo}>
+                                        addleaveInfo={this.handleleaveInfo} reset={() => null}>
                                         <ApplyLeave onLeaveChange={this.onLeaveChange}
                                             onStDateChange={this.onStDateChange}
                                             onEndDateChange={this.onEndDateChange}

@@ -10,6 +10,8 @@ import AccountSettings from "../Profile/AccountSettings";
 import LeaveRequests from "../LeaveRequests/LeaveRequests";
 import * as actions from "../../store/actions/index";
 import { checkValidity } from "../../shared/validation";
+import axios from 'axios';
+
 
 class Menubar extends Component {
     state = {
@@ -44,8 +46,11 @@ class Menubar extends Component {
         showFormNotice: false,
         duplicatedEmail: false
     }
-    handleItemClick = () => { };
+    
     componentDidMount() {
+
+        this.props.onGetUser(this.props.accountId);
+
         axios
             .get("https://localhost:44314/api/calendar/LeaveRequest")
             .then(response => {
@@ -56,19 +61,8 @@ class Menubar extends Component {
             });
     }
 
-    componentDidMount() {
-        this.props.onGetUser(this.props.accountId);
-    handleChange = e => {
-        e.preventDefault();
-    };
-    handleFormChange = (e, { name, value }) => {
-        this.setState({ [name]: value }, () => { console.log(this.state); });
-    }
     updateLeaveInfo = (updatedleaves) => {
-        //console.log(id);
-
-        this.setState({ newleaves: updatedleaves });
-        
+        this.setState({ newleaves: updatedleaves }); 
     }
     handleupdateleave = () => {
         var leaves = this.state.newleaves;
@@ -99,59 +93,33 @@ class Menubar extends Component {
             });
     }
     handlenewleavedata = (value) => {
-        //debugger
-        //console.log(value);
+       
         axios({
             method: 'post',
             url: 'https://localhost:44314/api/Calendar/LeaveRequest',
             data: value
         }).then(res => {
-            //debugger
+            debugger
             //console.log(res.data.value);
             this.setState({ leaves: res.data.value });
         });
       
     }
-
-
-    addStaffInfo = (e) => {
-        // e.preventDefault();
-        let userInfo = {
-            email: this.state.email,
-            password: this.state.password,
-            roleId: this.state.role
-        }
-        console.log(userInfo.email);
-        axios({
-            method: 'post',
-            url: 'https://localhost:44314/api/Account/Register',
-            data: userInfo
-        }).then(function (res) {
-
-            if (res.status === 200) {
-                alert('Account Created');
-            }
-            else {
-                alert('Account already Exists');
-            }
-            // debugger
-            this.setState({
-                email: '',
-                password: '',
-                role: ''
-            });
-        }.bind(this));
-        //console.log("Staff info is added");
-    }
-    clearStaffInfo = () => {
+    handleFormChange = (e, { name, value }) => {
         this.setState({
-            email: '',
-            password: '',
-            role: '',
-            emailerror: '',
-            pwderror: '',
-            roleerror: '',
-            formvalid: false
+            [name]: {
+                ...this.state[name],
+                value: value,
+                valid: checkValidity(
+                    value,
+                    this.state[name].validation
+                )
+            },
+            showFormNotice: false
+        }, () => {
+            if (!this.props.accounts.every(account => account.email !== this.state.email.value)) {
+                this.setState({ duplicatedEmail: true });
+            }
         });
 
     }
@@ -239,60 +207,53 @@ class Menubar extends Component {
                     </Menu.Item>
                     <Menu.Item style={{ "fontSize": "1.3em" }}>
                         {today}
-                    </h3>
-                </Menu.Item>
-                <Menu.Item position="right">
-                    <Menu compact secondary>
-                        <Menu.Item>
-                            <Input
-                                icon="users"
-                                iconPosition="left"
-                                placeholder="Search Staff..."
-                            />
-                        </Menu.Item>
-                        <Menu.Item>
-                            <Button.Group>
-                                <ModalUI icon="add user" header="Create New Account"
-                                    addStaffInfo={this.addStaffInfo}
-                                    validateForm={this.validateForm}
-                                    clearStaffInfo={this.clearStaffInfo}
-                                    >
-                                    <AddStaff onFormChange={this.handleFormChange}
-                                        emailerror={this.state.emailerror}
-                                        pwderror={this.state.pwderror}
-                                        roleerror={this.state.roleerror} />
-                                </ModalUI>
-                                <ModalUI icon="bell outline" header="Leave Request List"
-                                    updateLeaveInfo={this.handleupdateleave} formvalid>
-                                    <LeaveRequests leaves={this.state.leaves}
-                                        dltleave={this.deleteLeaveInfo}
-                                        newleavedata={this.handlenewleavedata}
-                                        user={this.state.user}
-                                        updateleavest={this.updateLeaveInfo}
-                                        />
-                                </ModalUI>
-                                <DropdownUI
-                                    icon="settings"
-                                    headerIcon="user"
-                                    content="Staff Name"
-                                >
-                                    <Button.Group vertical>
-                                        <ModalUI header="Personal Profile" category="Profile">
-                                            <EditProfile />
-                                        </ModalUI>
-                                        <ModalUI header="Account Settings" category="Account">
-                                            <AccountSettings />
-                                        </ModalUI>
-                                        <ModalUI header="Signout Confirmation" category="Sign out">
-                                            <h3>Do you want to sign out?</h3>
-                                        </ModalUI>
-                                    </Button.Group>
-                                </DropdownUI>
-                            </Button.Group>
-                        </Menu.Item>
-                    </Menu>
-                </Menu.Item>
-            </Menu>
+                    </Menu.Item>
+                    <Menu.Item position="right">
+                        <Input
+                            icon="users"
+                            iconPosition="left"
+                            placeholder="Search Staff..."
+                        />
+                    </Menu.Item>
+                    <Menu.Item>
+                            {isDisplay && <ModalUI icon="add user" circular inverted header="Add Account" addAccount={this.addAccount} formvalid={addAccountValid} showNotice={this.showNotice} reset={this.resetState}>
+                                <AddAccount onFormChange={this.handleFormChange} formControls={this.state} />
+                            </ModalUI>
+                            }
+                            <ModalUI icon="bell" inverted circular header="Leave Request List"
+                            updateLeaveInfo={this.handleupdateleave} reset={() => null} formvalid>
+                                <LeaveRequests leaves={this.state.leaves}
+                                    dltleave={this.deleteLeaveInfo}
+                                    newleavedata={this.handlenewleavedata}
+                                    user={this.state.user}
+                                    updateleavest={this.updateLeaveInfo}
+                                />
+                            </ModalUI>
+
+                        <Dropdown trigger={<Button icon="settings" inverted circular size="tiny" />} floating icon={null}>
+                            <Dropdown.Menu style={{ left: "auto", right: 0, fontSize: "1.3em" }}>
+                                <Dropdown.Header icon="user" content={this.props.accountEmail} />
+                                <Dropdown.Divider />
+                                <Dropdown.Item>
+                                    <ModalUI trigger="category" header="Personal Profile" category="Profile" reset={() => null}>
+                                        <EditProfile />
+                                    </ModalUI>
+                                </Dropdown.Item>
+                                <Dropdown.Item>
+                                    <ModalUI trigger="category" header="Account Settings" category="Account" accountSettings={() => this.props.onUpdateUserInfo(this.state.updatedUser)} formvalid={accountSettingValid} showNotice={this.showNotice} reset={this.resetState}>
+                                        <AccountSettings currentUser={this.props.currentUser} accountEmail={this.props.accountEmail} getUpdatedUser={this.getUpdatedUser} showFormNotice={this.state.showFormNotice} />
+                                    </ModalUI>
+                                </Dropdown.Item>
+                                <Dropdown.Item>
+                                    <ModalUI trigger="category" header="Sign Out" category="Sign Out" signout={() => this.props.onSignout()} reset={() => null} formvalid>
+                                        <h3>Do you want to sign out?</h3>
+                                    </ModalUI>
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Menu.Item>         
+                </Menu>
+            </React.Fragment>
         );
     }
 

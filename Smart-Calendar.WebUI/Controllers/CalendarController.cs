@@ -65,18 +65,15 @@ namespace Smart_Calendar.WebUI.Controllers
             }
             return Ok(userList);
         }
-
-
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetUserInfo(Guid id)
         {
             var user = _userRepo.Get(d => d.AccountId == id).SingleOrDefault();
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
+            
             return Ok(user);
         }
+
+
 
         [HttpPost("User")]
         public async Task<IActionResult> AddUserInfo([FromBody]User user)
@@ -152,43 +149,6 @@ namespace Smart_Calendar.WebUI.Controllers
             return Ok(accounts);
         }
 
-        [HttpPost("UserShift")]
-        public async Task<IActionResult> AddUserShift([FromBody]UserShift userShift)
-        {
-            await _userShiftRepo.CreateAsync(userShift);
-
-            return Ok(userShift.UserShiftId);
-        }
-
-        [HttpDelete("UserShifts/{userId}")]
-        public async Task<IActionResult> DeleteUserShift(Guid userId)
-        {
-            return Ok(await _userShiftRepo.DeleteAsync(d => d.UserId == userId));
-        }
-
-        [HttpPut("UserShift/{id}")]
-        public async Task<IActionResult> UpdateUserShift([FromBody]UserShift userShift)
-        {
-            return Ok(await _userShiftRepo.UpdateAsync(userShift));
-        }
-
-        [HttpPost("UserShifts/{userId}")]
-        public async Task<IActionResult> AddUserShifts([FromBody]List<UserShiftDto>userShifts)
-        {
-
-            foreach (var userShift in userShifts)
-            {
-                var newUserShift = new UserShift
-                {
-                    ShiftId = userShift.ShiftId,
-                    UserId = userShift.UserId,
-                    Day = userShift.Day
-                };
-                await _userShiftRepo.CreateAsync(newUserShift);
-            }
-
-            return Ok(await GetUserList());
-        }
         [HttpGet("LeaveRequest")]
         public async Task<IActionResult> GetLeaveList()
         {
