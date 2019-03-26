@@ -1,33 +1,34 @@
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'bootstrap/dist/css/bootstrap-theme.css';
 import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Provider } from 'react-redux';
-// import { ConnectedRouter } from 'react-router-redux';
-// import { createBrowserHistory } from 'history';
-// import configureStore from './store/configureStore';
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import thunk from "redux-thunk";
 import App from './App';
-//import Welcome from './containers/Welcome/Welcome';
+import staffTableReducer from "./store/reducers/staffTable";
+import authReducer from "./store/reducers/auth";
 import registerServiceWorker from './registerServiceWorker';
 
-// Create browser history to use in the Redux store
-// const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
-// const history = createBrowserHistory({ basename: baseUrl });
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-// // Get the application-wide store instance, prepopulating with state from the server where available.
-// const initialState = window.initialReduxState;
-// const store = configureStore(history, initialState);
+const rootReducer = combineReducers({
+    staffTable: staffTableReducer,
+    auth: authReducer
+});
+
+const store = createStore(
+    rootReducer,
+    composeEnhancers(applyMiddleware(thunk))
+);
 
 const rootElement = document.getElementById('root');
 
 ReactDOM.render(
-  // <Provider store={store}>
-  //   <ConnectedRouter history={history}>
-//<Welcome />,
-<App />,
-  //   </ConnectedRouter>
-  // </Provider>,
-  rootElement);
+    <Provider store={store}>
+        <BrowserRouter >
+            <App />
+        </BrowserRouter>
+    </Provider>, rootElement);
 
 registerServiceWorker();

@@ -2,8 +2,8 @@ import React from 'react';
 import {Grid} from 'semantic-ui-react';
 
 
-const Footer = () =>(
-    <Grid columns= 'equal'>
+const Footer = () => (
+    <Grid columns='equal' style={{ "backgroundColor": "black", "color": "white"}}>
    
         <Grid.Column>
             <h3 align="left">@Copyright by SmartCalender</h3>

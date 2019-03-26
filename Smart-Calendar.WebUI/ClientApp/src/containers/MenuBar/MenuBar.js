@@ -1,28 +1,48 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import moment from "moment";
-import { Menu, Icon, Header, Input, Button } from "semantic-ui-react";
+import { Menu, Icon, Header, Input, Button, Dropdown } from "semantic-ui-react";
 import ModalUI from "../../components/UI/ModalUI";
-import DropdownUI from "../../components/UI/DropdownUI";
-import AddStaff from "../Profile/AddStaff";
+import AddAccount from "../../components/UserInfo/AddAccount/AddAccount";
 import EditProfile from "../Profile/EditProfile";
 import AccountSettings from "../Profile/AccountSettings";
 import LeaveRequests from "../LeaveRequests/LeaveRequests";
-import axios from "axios";
+import * as actions from "../../store/actions/index";
+import { checkValidity } from "../../shared/validation";
 
-
-export default class Menubar extends Component {
-    
+class Menubar extends Component {
     state = {
-        email: '',
-        password: '',
-        role: '',
-        emailerror: '',
-        pwderror: '',
-        roleerror: '',
-        formvalid: false,
-        leaves: null,
-        user: 'Admin',
-        newleaves:null
+        email: {
+            value: null,
+            validation: {
+                required: true,
+                isEmail: true
+            },
+            error: "Please enter a valid email",
+            valid: false
+        },
+        password: {
+            value: null,
+            validation: {
+                required: true,
+                minLength: 4
+            },
+            error: "Password must be greater than or equal to 4 digits",
+            valid: false
+        },
+        roleId: {
+            value: null,
+            validation: null,
+            error: "Please select a role",
+            valid: false
+        },
+        updatedUser: {
+            firstName: null,
+            lastName: null
+        },
+        showFormNotice: false,
+        duplicatedEmail: false
     }
     handleItemClick = () => { };
     componentDidMount() {
@@ -36,6 +56,8 @@ export default class Menubar extends Component {
             });
     }
 
+    componentDidMount() {
+        this.props.onGetUser(this.props.accountId);
     handleChange = e => {
         e.preventDefault();
     };
@@ -131,71 +153,91 @@ export default class Menubar extends Component {
             roleerror: '',
             formvalid: false
         });
+
     }
 
-    validateForm = () => {
+    addAccount = () => {
+        let newAccount = {
+            email: this.state.email.value,
+            password: this.state.password.value,
+            roleId: this.state.roleId.value
+        };
+        this.props.onAddAccount(newAccount);
+    }
 
-        let formisvalid = false;
-        let error, perror, rolemsg;
-        let emailflg = true;
-        let pwdflg = true;
-        let roleflg = true;
-        error = '';
-        perror = '';
-        rolemsg = '';
-        var email = this.state.email;
-        var pwd = this.state.password;
-        var role = this.state.role;
-        debugger
-        if (!email) {
-            emailflg = false;
-            error = 'Please Enter Valid Email-ID';
-        }
-        else {
-            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-            if (!pattern.test(email)) {
-                emailflg = false;
-                error = "*Please enter valid email-ID.";
-            }
-        }
-        if (!pwd) {
-            pwdflg = false;
-            perror = 'Please Enter Password';
-        }
-        if (!role) {
-            roleflg = false;
-            rolemsg = 'Please Select Role';
-        }
-        if (emailflg && pwdflg && roleflg) { formisvalid = true; }
-        else { formisvalid = false; }
+    getUpdatedUser = (updatedUser) => {
+        this.setState({ updatedUser: updatedUser });
+    }
+
+    showNotice = () => {
+        this.setState({ showFormNotice: true });
+    }
+
+    resetState = () => {
         this.setState({
-            emailerror: error,
-            pwderror: perror,
-            roleerror: rolemsg,
-            formvalid: formisvalid
+            email: {
+                value: null,
+                validation: {
+                    required: true,
+                    isEmail: true
+                },
+                error: "Please enter a valid email",
+                valid: false
+            },
+            password: {
+                value: null,
+                validation: {
+                    required: true,
+                    minLength: 4
+                },
+                error: "Password must be greater than or equal to 4 digits",
+                valid: false
+            },
+            roleId: {
+                value: null,
+                validation: null,
+                error: "Please select a role",
+                valid: false
+            },
+            updatedUser: {
+                firstName: null,
+                lastName: null
+            },
+            showFormNotice: false,
+            duplicatedEmail: false
         });
-        return formisvalid;
     }
 
     render() {
         const today = moment().format("DD MMMM YYYY, dddd");
         const currentWeek = moment().weeks();
+        let isDisplay = this.props.roleId === "1";
+        let addAccountValid = this.state.email.value && this.state.password.value && this.state.roleId.value &&
+            this.state.email.valid && this.state.password.valid && !this.state.duplicatedEmail;
+        let accountSettingValid = this.state.updatedUser.firstName && this.state.updatedUser.lastName;
+
         return (
-            <Menu secondary>
-                <Menu.Item>
-                    <Header as="h1" size="large">
-                        <Icon name="calendar alternate outline" />
-                        <Header.Content>
-                            Smart Calendar
-              <Header.Subheader>
-                                The Next Generation HR Management System
-              </Header.Subheader>
-                        </Header.Content>
-                    </Header>
-                </Menu.Item>
-                <Menu.Item style={{ margin: "auto" }}>
-                    <h3>
-                        Current Week: {currentWeek} <br />
+            <React.Fragment>
+                {!this.props.isAuthenticated && <Redirect to={this.props.authRedirectPath} />}
+                <Menu secondary>
+                    <Menu.Item >
+                        <Header as="h1" size="large">
+                            <Icon name="calendar alternate outline" />
+                            <Header.Content>
+                                Smart Calendar
+                            </Header.Content>
+                        </Header>
+                    </Menu.Item>
+                    <Menu.Item position="right" style={{ "letterSpacing": "0.2em" }}>
+                        THE NEXT GENERATION EMPLOYEE MANAGEMENT SYSTEM
+                    </Menu.Item>
+                </Menu>
+
+                <Menu inverted size="tiny" borderless>
+                    <Menu.Item style={{ "fontSize": "1.3em" }}>
+                        Current Week: {currentWeek}
+                    </Menu.Item>
+                    <Menu.Item style={{ "fontSize": "1.3em" }}>
                         {today}
                     </h3>
                 </Menu.Item>
@@ -255,3 +297,29 @@ export default class Menubar extends Component {
     }
 
 }
+
+const mapStateToProps = state => {
+    return {
+        roleId: state.auth.roleId,
+        accountId: state.auth.accountId,
+        accountEmail: state.auth.email,
+        isAuthenticated: state.auth.token !== null,
+        authRedirectPath: state.auth.authRedirectPath,
+        accounts: state.staffTable.accounts,
+        currentUser: state.staffTable.currentUser
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onSignout: () => dispatch(actions.logout()),
+        onAddAccount: newAccount => dispatch(actions.addAccount(newAccount)),
+        onGetUser: id => dispatch(actions.getUserInfo(id)),
+        onUpdateUserInfo: updatedUser => dispatch(actions.updateUserPartial(updatedUser))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Menubar);

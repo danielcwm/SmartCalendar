@@ -1,79 +1,63 @@
-import React, { Component
-} from "react";
-import { Form, Input, Select } from "semantic-ui-react";
+import React, { Component } from "react";
+import { Form, Input, Header, Message } from "semantic-ui-react";
 
-const roles = [
-    { key: 'a', text: 'Admin', value: '1'},
-    { key: 'm', text: 'Member', value: '2' }
-]
 class AccountSettings extends Component {
 
     state = {
-        email: '',
-        password: '',
-        role: '',
-        phoneNumber:''
+        userId: this.props.currentUser.userId,
+        accountId: this.props.currentUser.accountId,
+        firstName: this.props.currentUser.firstName,
+        lastName: this.props.currentUser.lastName,
+        gender: this.props.currentUser.gender,
+        departmentId: this.props.currentUser.departmentId,
+        positionId: this.props.currentUser.positionId
     }
-    
-    handleAccountInfo = (e, {name,value}) => {
-        this.setState({
-            [name]:value
-        }, () => { console.log(this.state);});
+
+    onFormChange = (e, { name, value }) => {
+        this.setState({ [name]: value }, () => this.props.getUpdatedUser(this.state));
+    };
+
+    render() {
+        return (
+            <div>
+                <Header>Your Email: {this.props.accountEmail}</Header>
+                {this.props.currentUser.userId ?
+                    <Form>
+                        <Form.Group widths="equal">
+                            <Form.Field
+                                control={Input}
+                                label="First name"
+                                name="firstName"
+                                value={this.state.firstName}
+                                onChange={this.onFormChange}
+                            />
+                            <Form.Field
+                                control={Input}
+                                label="Last name"
+                                name="lastName"
+                                value={this.state.lastName}
+                                onChange={this.onFormChange}
+                            />
+                        </Form.Group>
+                        {this.props.showFormNotice &&
+                            <Form.Group widths="equal">
+                                <Form.Field>
+                                    {!this.state.firstName && <Message size="small" negative>Please enter first name</Message>}
+                                </Form.Field>
+                                <Form.Field>
+                                    {!this.state.lastName && <Message size="small" negative>Please enter last name</Message>}
+                                </Form.Field>
+                            </Form.Group>
+                        }
+                    </Form> :
+                    <Message warning size="big">
+                        <Message.Header>Account not activated!</Message.Header>
+                        <p>Please inform admin to activate your account, then try again.</p>
+                    </Message>
+                }
+            </div>
+        );
     }
-   
-  render() {
-    return (
-      <div>
-        <Form>
-          <Form.Group widths="equal">
-            <Form.Field
-              control={Input}
-              label="First name"
-              placeholder="First Name"
-            />
-            <Form.Field
-              control={Input}
-              label="Last name"
-              placeholder="Last Name"
-            />
-            <Form.Field
-                control={Select}
-                name= "role"
-                label="Role"
-                placeholder="Select Role"
-                options={roles}
-                onChange={this.handleAccountInfo}
-            />
-          </Form.Group>
-          <Form.Group widths="equal">
-            <Form.Field
-                control={Input}
-                type='email'
-                label="Email"
-                placeholder="Email"
-                name="email"
-                onChange={this.handleAccountInfo}
-            />
-            <Form.Field
-                control={Input}
-                type='password'
-                label="Password"
-                name="password"
-                placeholder="Password"
-                onChange={this.handleAccountInfo}
-            />
-            <Form.Field
-                control={Input}
-                label="Phone Number"
-                name="phoneNumber"
-                placeholder="Phone Number"
-                onChange={this.handleAccountInfo}
-            />
-          </Form.Group>
-        </Form>
-      </div>
-    );
-  }
 }
 
 export default AccountSettings;

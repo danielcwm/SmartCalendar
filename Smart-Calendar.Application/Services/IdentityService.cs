@@ -36,7 +36,7 @@ namespace Smart_Calendar.Application.Services
         }
         public async Task<TokenResponseDto> LoginAsync(LoginDto credential)
         {
-            var user =  _accountRepo.Get(a => a.Email == credential.Email).SingleOrDefault();
+            var user = _accountRepo.Get(a => a.Email == credential.Email).SingleOrDefault();
             if (user == null)
             {
                 return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
@@ -47,7 +47,13 @@ namespace Smart_Calendar.Application.Services
                 return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
             }
 
-            return new TokenResponseDto { Token = _jwtHelper.GenerateToken(credential.Email) , Code = System.Net.HttpStatusCode.OK};
+            return new TokenResponseDto
+            {
+                Token = _jwtHelper.GenerateToken(credential.Email),
+                Code = System.Net.HttpStatusCode.OK,
+                RoleId = user.RoleId,
+                AccountId = user.AccountId
+            };
         }
         private bool VerifyPasswordHash(byte[] hash, byte[] salt, string password)
         {

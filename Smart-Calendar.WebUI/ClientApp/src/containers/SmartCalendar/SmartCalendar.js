@@ -1,21 +1,24 @@
 import React, { Component } from "react";
 import { Divider, Container } from "semantic-ui-react";
 import Menubar from "../MenuBar/MenuBar";
+import StaffTable from "../StaffTable/StaffTable";
+import Footer from "../../components/Footer/Footer";
 
 class SmartCalender extends Component {
-  componentDidMount(){
-
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <Menubar />
-        <Divider hidden />
-        <Container>{this.props.children}</Container>
-      </React.Fragment>
-    );
-  }
+    
+    render() {
+        return (
+            <div>
+                <Menubar />
+                <Divider hidden />
+                <Container>
+                    <StaffTable />
+                    <Divider hidden />
+                    <Footer />
+                </Container>
+            </div>
+        );
+    }
 }
 
 export default SmartCalender;

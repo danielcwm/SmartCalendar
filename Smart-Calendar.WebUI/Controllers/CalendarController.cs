@@ -1,5 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using Smart_Calendar.Application.Repositories;
 using Smart_Calendar.Application.Dtos;
 using Smart_Calendar.Domain.Entities;
@@ -35,9 +34,7 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetUserList()
         {
-
             var results = await _userRepo.GetAllAsync(c => c.Department, c => c.Position, c => c.Account, c => c.UserShift);
-
 
             var userList = new List<UserVM>();
 
@@ -55,6 +52,7 @@ namespace Smart_Calendar.WebUI.Controllers
                 {
                     Id = user.UserId,
                     AccountId = user.AccountId,
+                    Email = user.Account.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
@@ -72,11 +70,11 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetUserInfo(Guid id)
         {
-            var user = _userRepo.Get(d => d.UserId == id).SingleOrDefault();
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var user = _userRepo.Get(d => d.AccountId == id).SingleOrDefault();
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
             return Ok(user);
         }
 
@@ -85,8 +83,60 @@ namespace Smart_Calendar.WebUI.Controllers
         {
 
             await _userRepo.CreateAsync(user);
-            var usersInDb = await GetUserList(); 
+            var usersInDb = await GetUserList();
             return Ok(usersInDb);
+        }
+
+        [HttpPut("User/{userId}")]
+        public async Task<IActionResult> UpdateUserShift([FromBody]UpdateUserDto updatedUser)
+        {
+            var newUser = new User
+            {
+                UserId = updatedUser.UserId,
+                AccountId = updatedUser.AccountId,
+                FirstName = updatedUser.FirstName,
+                LastName = updatedUser.LastName,
+                Gender = updatedUser.Gender,
+                DepartmentId = updatedUser.DepartmentId,
+                PositionId = updatedUser.PositionId
+            };
+            await _userShiftRepo.DeleteAsync(d => d.UserId == updatedUser.UserId);
+
+            await _userRepo.UpdateAsync(newUser);
+
+            if (updatedUser.UserShifts.Count > 0)
+            {
+                foreach (var userShift in updatedUser.UserShifts)
+                {
+                    var newUserShift = new UserShift
+                    {
+                        ShiftId = userShift.ShiftId,
+                        UserId = userShift.UserId,
+                        Day = userShift.Day
+                    };
+                    await _userShiftRepo.CreateAsync(newUserShift);
+                }
+            }
+            return Ok(await GetUserList());
+        }
+
+        [HttpPut("UserPartial/{userId}")]
+        public async Task<IActionResult> UpdateUserPartial([FromBody]UpdateUserPartialDto updatedUser)
+        {
+            var user = new User
+            {
+                UserId = updatedUser.UserId,
+                AccountId = updatedUser.AccountId,
+                FirstName = updatedUser.FirstName,
+                LastName = updatedUser.LastName,
+                Gender = updatedUser.Gender,
+                DepartmentId = updatedUser.DepartmentId,
+                PositionId = updatedUser.PositionId
+            };
+
+            await _userRepo.UpdateAsync(user);
+            
+            return Ok(await GetUserList());
         }
 
         [HttpDelete("User/{id}")]
@@ -210,6 +260,7 @@ namespace Smart_Calendar.WebUI.Controllers
     {
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }
+        public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }

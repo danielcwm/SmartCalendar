@@ -1,18 +1,54 @@
 ﻿import React, { Component } from "react";
-import SmartCalender from "./containers/SmartCalendar/SmartCalendar";
-import "./containers/StaffTable/StaffTable";
-import StaffTable from "./containers/StaffTable/StaffTable";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import SmartCalendar from "./containers/SmartCalendar/SmartCalendar";
+import Welcome from './containers/Welcome/Welcome';
+import * as actions from "./store/actions/index";
 
 class App extends Component {
-  render() {
-    return (
-      <div>
-        <SmartCalender>
-          <StaffTable />
-        </SmartCalender>
-      </div>
-    );
-  }
+    componentDidMount() {
+        this.props.onTryAutoSignin();
+    }
+
+    render() {
+        let routes = (
+            <Switch>
+                <Route path="/" exact component={Welcome} />
+                <Redirect to="/" />
+            </Switch>
+        );
+
+        if (this.props.isAuthenticated) {
+            routes = (
+                <Switch>
+                    <Route path="/SmartCalendar" exact component={SmartCalendar} />
+                    <Redirect to="/SmartCalendar" />
+                </Switch>
+            );
+        }
+
+        return (
+            <div>
+                {routes}
+            </div>
+        );
+    }
 }
 
-export default App;
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.token !== null
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onTryAutoSignin: () => dispatch(actions.authCheckState())
+    };
+};
+
+export default withRouter(connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App));
+

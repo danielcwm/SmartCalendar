@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Modal } from "semantic-ui-react";
+import { Button, Modal, Image } from "semantic-ui-react";
 
 class ModalUI extends Component {
     state = { open: false };
@@ -8,12 +8,8 @@ class ModalUI extends Component {
         this.setState({ closeOnEscape, closeOnDimmerClick, open: true });
     };
 
-    close = () => {
-        
-        //var formvalid = this.props.validateForm();
-        
+    confirm = () => {
         if (this.props.formvalid) {
-            //this.setState({ open: false });
             this.setState({ open: false });
             switch (this.props.header) {
                 case "Delete User Info":
@@ -30,47 +26,68 @@ class ModalUI extends Component {
                     return this.props.addleaveInfo();
                 case "Leave Request List":
                     return this.props.updateLeaveInfo();
+                case "Edit User Info":
+                    return this.props.editUserInfo();
+                case "Add Account":
+                    return this.props.addAccount();
+                case "Account Settings":
+                    return this.props.accountSettings();
+                case "Sign In":
+                    return this.props.signin();
+                case "Sign Out":
+                    return this.props.signout();
                 default:
                     return null;
             }
         }
+        this.props.showNotice();
     };
 
     cancel = () => {
-        this.props.header === 'Create New Account' ? this.props.clearStaffInfo() : null;
         this.setState({ open: false });
+        this.props.reset();
     };
 
     render() {
         const { open, closeOnEscape, closeOnDimmerClick } = this.state;
+        let trigger =
+            this.props.trigger === "image" ?
+                <Image src={this.props.image} onClick={this.closeConfigShow(false, false)} fluid />
+                : this.props.trigger === "category" ?
+                    <span onClick={this.closeConfigShow(false, false)}>{this.props.category}</span>
+                    : <Button
+                        basic={this.props.basic}
+                        inverted={this.props.inverted}
+                        color={this.props.color}
+                        icon={this.props.icon}
+                        circular={this.props.circular}
+                        onClick={this.closeConfigShow(false, false)}
+                    >{this.props.category}
+                    </Button>;
 
         return (
             <React.Fragment>
-                <Button
-                    basic
-                    icon={this.props.icon}
-                    onClick={this.closeConfigShow(false, false)}>
-                    {this.props.category}
-                </Button>
-
+                {trigger}
                 <Modal
                     open={open}
                     closeOnEscape={closeOnEscape}
                     closeOnDimmerClick={closeOnDimmerClick}
-                    onClose={this.close}>
+                    onClose={this.close}
+                >
                     <Modal.Header>{this.props.header}</Modal.Header>
                     <Modal.Content>
                         <Modal.Description>{this.props.children}</Modal.Description>
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button onClick={this.cancel} negative>
+                        <Button onClick={this.cancel} inverted color="red">
                             Cancel</Button>
                         <Button
-                            positive
-                            icon="checkmark"
-                            labelPosition="right"
-                            content="Confirm"
-                            onClick={this.close} />
+                            inverted
+                            color="blue"
+                            onClick={this.confirm}
+                        >
+                            Done
+                        </Button>
                     </Modal.Actions>
                 </Modal>
             </React.Fragment>
@@ -79,4 +96,3 @@ class ModalUI extends Component {
 }
 
 export default ModalUI;
-
