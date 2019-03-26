@@ -21,47 +21,40 @@ class LeaveRequests extends Component {
             rawstdate: '',
             rawenddate: '',
             updateleavedata: this.props.leaves,
-            newleavedata:''
+            newleavedata:null
         }
     }
    
     onStDateChange = (value) => {
-        //debugger
-        //var rawstdate = value;
+        
         var date = moment(value).toDate();
         var datefr = moment(date).format("DD/MM/YYYY");
         this.setState({
             startdate: datefr,
             rawstdate: value
-        }, () => { //console.log(this.state); 
         });
     };
     onEndDateChange = (value) => {
-        //debugger
+        
         var rawenddate = value;
         var date = moment(value).toDate();
         var datefr = moment(date).format("DD/MM/YYYY");
         this.setState({
             enddate: datefr,
             rawenddate: value
-        }, () => { //console.log(this.state); 
         });
     };
     onLeaveChange = (value) => {
         
-        this.setState({ leavetype: value }, () => { //console.log(this.state); 
-        });
+        this.setState({ leavetype: value });
     };
     onInputChange = (e, {name, value}) => {
-        this.setState({ [name]: value }, () => { //console.log(this.state); 
-        });
+        this.setState({ [name]: value });
     }
     handleleaveInfo = () => { 
         var data = null;
         let leaveId = parseInt(this.state.leavetype);
         let srtdate = moment(this.state.startdate).format("YYYY-MM-DD");
-        
-        debugger
         
         let leavedata = {
             userId: "f9a6eea1-1d7d-4eca-9906-a3ef76a0de4a",
@@ -74,14 +67,12 @@ class LeaveRequests extends Component {
         this.props.newleavedata(leavedata);
     }
     handleleavest = (data) => {
-        debugger
        
         this.setState({
             newleavedata: [...this.state.newleavedata,data]
         }, () => {
-           // console.log(this.state.newleavedata);
+           
             this.props.updateleavest(this.state.newleavedata);
-            
         });
       
     }
@@ -158,9 +149,5 @@ class LeaveRequests extends Component {
     );
   }
 }
-//{this.state.leaves.map(leave => (
-                    //    <LeaveTableRow
-                    //        leavedata={leave}  
-                    //    />
-                    //))}
+
 export default LeaveRequests;
