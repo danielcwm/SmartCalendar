@@ -2,6 +2,7 @@
 import { Table, ButtonGroup,Form, Radio } from "semantic-ui-react";
 import moment from 'moment';
 import ModalUI from "../../components/UI/ModalUI";
+
 class LeaveTableRow extends Component {
 
     state = {
@@ -40,8 +41,9 @@ class LeaveTableRow extends Component {
     render(){ 
     
         let leavest = 'Pending';
+        let isDisplay = this.props.roleId === "1";
       
-        console.log(this.props.leavedata.status);
+        console.log(this.props.roleId);
         if (this.props.leavedata.status === 1) { leavest = "Approved" }
         if (this.props.leavedata.status === 2) { leavest = "Rejected" }
 
@@ -49,10 +51,10 @@ class LeaveTableRow extends Component {
     let enddate = parseInt(moment(this.props.leavedata.endDate).format('DD MM YYYY'));
     
     let days = enddate - stdate + 1;
-    var member = this.props.user;
+    //var member = this.props.user;
     let user;
     
-        if (member === 'Admin') {
+        if (isDisplay) {
            
             if (this.props.leavedata.status === 0) {
                 user = <div>
@@ -93,7 +95,7 @@ class LeaveTableRow extends Component {
             <Table.Cell>{moment(this.props.leavedata.endDate).format('DD/MM/YYYY')}</Table.Cell>
             <Table.Cell>{days}</Table.Cell>
             <Table.Cell>{user}</Table.Cell>  
-            <Table.Cell>
+            {isDisplay && <Table.Cell>
                 <ButtonGroup >
                     <ModalUI icon="trash alternate outline"
                         header="Delete Leave Record"
@@ -102,7 +104,7 @@ class LeaveTableRow extends Component {
                         <h3>Do you want to Delete the Leave Record?</h3>
                     </ModalUI>
                 </ButtonGroup>
-            </Table.Cell>
+            </Table.Cell>}
         </Table.Row>
         );
     }

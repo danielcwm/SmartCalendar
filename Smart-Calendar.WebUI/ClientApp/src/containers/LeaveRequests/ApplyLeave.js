@@ -1,8 +1,8 @@
 ﻿import React, { Component } from "react";
-import { Form, Select, Input,Checkbox } from "semantic-ui-react";
+import { Form, Input,Checkbox} from "semantic-ui-react";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import moment from 'moment';
+//import moment from 'moment';
 
 class AddLeave extends Component{
     state = {
@@ -30,22 +30,31 @@ class AddLeave extends Component{
     };
     
     render() {
+        let dept = '';
+        console.log(this.props.userinfo.departmentId);
+        if (this.props.userinfo.departmentId === 1) {
+            dept = 'IT';
+        }
         return (
             <div>
                 <Form>
                     <Form.Field
-                    control={Input}
-                    name="firstName"
-                    label="FirstName"
-                    placeholder="Select an FirstName"
-                    onChange={this.props.onInputChange}
+                         control={Input}
+                        name="firstName"
+                        label="FirstName"
+                        value={this.props.userinfo.firstName}
+                        onChange={this.props.onInputChange}
+                        readOnly
                     />
+                    
                     <Form.Field
                         control={Input}
                         name="Dept"
                         label="Department"
                         placeholder="Department"
-                    onChange={this.props.onInputChange}
+                        value={dept}
+                        onChange={this.props.onInputChange}
+                        readOnly
                     />
                     <Form.Group inline>
                         <Form.Field>

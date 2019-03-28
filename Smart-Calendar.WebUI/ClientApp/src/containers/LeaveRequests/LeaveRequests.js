@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table, Checkbox, ButtonGroup } from "semantic-ui-react";
+import { Table,ButtonGroup ,Button,Icon} from "semantic-ui-react";
 import axios from "axios";
 import LeaveTableRow from "./LeaveTableRow";
 import ModalUI from "../../components/UI/ModalUI";
@@ -15,13 +15,13 @@ class LeaveRequests extends Component {
             enddate: null,
             sick: '',
             casual: '',
-            user: 'Admin',
+            //user: 'Admin',
             firstName: '',
             Dept: '',
             rawstdate: '',
             rawenddate: '',
             updateleavedata: this.props.leaves,
-            newleavedata:null
+            newleavedata:''
         }
     }
    
@@ -36,7 +36,7 @@ class LeaveRequests extends Component {
     };
     onEndDateChange = (value) => {
         
-        var rawenddate = value;
+        //var rawenddate = value;
         var date = moment(value).toDate();
         var datefr = moment(date).format("DD/MM/YYYY");
         this.setState({
@@ -52,12 +52,13 @@ class LeaveRequests extends Component {
         this.setState({ [name]: value });
     }
     handleleaveInfo = () => { 
-        var data = null;
+        //debugger
+       // var data = null;
         let leaveId = parseInt(this.state.leavetype);
-        let srtdate = moment(this.state.startdate).format("YYYY-MM-DD");
+        //let srtdate = moment(this.state.startdate).format("YYYY-MM-DD");
         
         let leavedata = {
-            userId: "f9a6eea1-1d7d-4eca-9906-a3ef76a0de4a",
+            userId: this.props.currentuser.userId,
             startDate: this.state.rawstdate,
             endDate: this.state.rawenddate,
             isApproved: "Pending",
@@ -88,7 +89,8 @@ class LeaveRequests extends Component {
             });
     }
     render() {
-        console.log(this.props.leaves);
+        console.log(this.props.roleId);
+        let isDisplay = this.props.roleId === "1";
         
     return (
       <div>
@@ -116,34 +118,38 @@ class LeaveRequests extends Component {
               <Table.HeaderCell>
                 <h3>Status</h3>
                 </Table.HeaderCell>
-                <Table.HeaderCell>
-                    <h3>Action
-                        <ButtonGroup>
-                                    <ModalUI icon="add" header="ApplyLeave"
-                                        formvalid
-                                        addleaveInfo={this.handleleaveInfo} reset={() => null}>
-                                        <ApplyLeave onLeaveChange={this.onLeaveChange}
-                                            onStDateChange={this.onStDateChange}
-                                            onEndDateChange={this.onEndDateChange}
-                                            onInputChange={this.onInputChange}
-                                        />
-                                </ModalUI>
-                    </ButtonGroup>
-                    </h3>
-                </Table.HeaderCell>
-            </Table.Row>
+                {isDisplay && <Table.HeaderCell><h3>Delete</h3></Table.HeaderCell>}
+                </Table.Row>
                 </Table.Header>
 
-                <Table.Body>{this.props.leaves.map(leave =>
+                <Table.Body>
+                    {this.props.leaves.map(leave =>
                     (<LeaveTableRow
                         key={leave.leaveRequestId}
                         leavedata={leave}
-                        user={this.props.user}
                         deleteLeaveinfo={() => this.props.dltleave(leave.leaveRequestId)}
                         updateleaverow={this.handleleavest}
-                    />))   
-                } 
+                        roleId={this.props.roleId}
+                    />))} 
                 </Table.Body>
+                <Table.Footer fullWidth>
+                    <Table.Row>
+                        <Table.HeaderCell  colSpan = '8'>
+                            <ModalUI Icon ="user" header="ApplyLeave" primary color='blue'
+                                formvalid
+                                category='Apply Leave'
+                                floated = 'right'
+                                addleaveInfo={this.handleleaveInfo} reset={() => null}>
+                                <ApplyLeave onLeaveChange={this.onLeaveChange}
+                                    onStDateChange={this.onStDateChange}
+                                    onEndDateChange={this.onEndDateChange}
+                                    onInputChange={this.onInputChange}
+                                    userinfo={this.props.currentuser}
+                                />
+                            </ModalUI>  
+                        </Table.HeaderCell>
+                    </Table.Row>
+                </Table.Footer>
         </Table>
       </div>
     );
