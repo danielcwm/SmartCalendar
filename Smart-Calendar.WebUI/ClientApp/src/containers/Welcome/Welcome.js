@@ -183,6 +183,7 @@ class Welcome extends Component {
                 </Menu>
 
                 {errorMessage}
+
                 <Container style={{marginTop: "7em", marginBottom: "7em" }}>
                     <Header as="h1"
                         content="Welcome to Smart Calendar"

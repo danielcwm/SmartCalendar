@@ -28,7 +28,7 @@ class SmartCalender extends Component {
                             <StaffTable users={this.props.users} />
                         </Container>
                         <Divider hidden />
-                        <Footer />
+                        <Footer /> 
                     </div>
                     : <Loader active inline="centered" size="massive" />}
             </React.Fragment >
