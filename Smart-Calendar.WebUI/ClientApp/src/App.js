@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import SmartCalendar from "./containers/SmartCalendar/SmartCalendar";
 import Welcome from './containers/Welcome/Welcome';
 import * as actions from "./store/actions/index";
+import { ToastContainer } from "react-toastify";
 
 class App extends Component {
     componentDidMount() {
@@ -30,7 +31,9 @@ class App extends Component {
         return (
             <div>
                 {routes}
+                <ToastContainer />
             </div>
+          
         );
     }
 }

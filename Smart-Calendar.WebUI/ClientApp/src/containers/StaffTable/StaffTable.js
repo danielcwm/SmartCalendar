@@ -7,6 +7,8 @@ import ModalUI from "../../components/UI/ModalUI";
 import AddUserInfo from "../../components/UserInfo/AddUserInfo/AddUserInfo";
 import { checkValidity } from "../../shared/validation";
 import axios from "../../axios-api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class StaffTable extends Component {
     state = {
@@ -109,6 +111,14 @@ class StaffTable extends Component {
             .post("calendar/user", userInfo)
             .then(response => {
                 this.setState({ data: response.data.value });
+                toast.info("User Added!!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -120,6 +130,14 @@ class StaffTable extends Component {
             .delete("calendar/user/" + id)
             .then(response => {
                 this.setState({ data: this.state.data.filter(user => user.id !== id) });
+                toast.warn("User Deleted!!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -130,6 +148,14 @@ class StaffTable extends Component {
         axios.put("calendar/user/" + updatedUser.userId, updatedUser)
             .then(response => {
                 this.setState({ data: response.data.value });
+                toast.info("User info Updated!!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                });
             }).catch(error => {
                 console.log(error);
             });

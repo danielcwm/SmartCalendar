@@ -13,6 +13,7 @@ import * as actions from "../../store/actions/index";
 import { checkValidity } from "../../shared/validation";
 import axios from "../../axios-api";
 
+
 class Menubar extends Component {
     state = {
         email: {

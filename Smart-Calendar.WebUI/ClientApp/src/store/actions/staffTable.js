@@ -1,5 +1,7 @@
 ﻿import * as actionTypes from "./actionTypes";
 import axios from "../../axios-api";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const initUsers = () => {
     return dispatch => {
@@ -56,6 +58,14 @@ export const addAccount = newAccount => {
                         type: actionTypes.ADD_ACCOUNTINFO,
                         newAccounts: response.data
                     });
+                toast.info("User Account is Created", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                });
             })
             .catch(error => {
                 console.log(error);
@@ -71,6 +81,14 @@ export const updateUserPartial = updatedUser => {
                     type: actionTypes.UPDATE_USERINFO,
                     newUsers: response.data.value,
                     currentUser: updatedUser
+                });
+                toast.info("User Info is Updated", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
                 });
             }).catch(error => {
                 console.log(error);
