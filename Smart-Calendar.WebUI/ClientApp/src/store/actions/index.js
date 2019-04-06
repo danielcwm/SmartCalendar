@@ -3,8 +3,11 @@
     initAccounts,
     addAccount,
     getUserInfo,
+    addUserInfo,
+    deleteUserInfo,
+    updateUserInfo,
     updateUserPartial,
-    setSearchField,
+    setSearchField
 } from './staffTable';
 
 export {

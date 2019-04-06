@@ -18,7 +18,7 @@ class AccountSettings extends Component {
     }
 
     onFormChange = (e, { name, value }) => {
-        this.setState({ [name]: value }, () => this.props.getUpdatedUser(this.state));
+        this.setState({ [name]: value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() }, () => this.props.getUpdatedUser(this.state));
     }
 
     render() {

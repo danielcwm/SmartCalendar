@@ -6,7 +6,7 @@ import EditUserInfo from "../../UserInfo/EditUserInfo/EditUserInfo";
 
 const TableRow = props => {
     return (
-        <Table.Row>
+        <Table.Row style={props.user.accountId === props.accountId ? { color: "blue" } : null}>
             <Table.Cell>{props.user.firstName}</Table.Cell>
             <Table.Cell>{props.user.lastName}</Table.Cell>
             <Table.Cell>{props.user.gender}</Table.Cell>

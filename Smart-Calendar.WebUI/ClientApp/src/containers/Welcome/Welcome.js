@@ -192,14 +192,7 @@ class Welcome extends Component {
                     </Menu>
 
                     {errorMessage}
-                    <Container style={{
-                        //position: "absolute",
-                        //top: "30%",
-                        //left: "50%",
-                        //marginRight: "-50%",
-                        //transform: "translate(-50%, -50%)"
-                    }}
-                    >
+                    <Container style={{ marginTop: "7%" }}>
                         <Header as="h1"
                             content="Welcome to Smart Calendar"
                             style={{

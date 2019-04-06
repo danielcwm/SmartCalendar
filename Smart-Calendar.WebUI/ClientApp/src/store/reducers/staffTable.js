@@ -19,7 +19,19 @@ const getUserInfo = (state, action) => {
     return { ...state, currentUser: action.currentUser };
 };
 
+const addUserInfo = (state, action) => {
+    return { ...state, users: action.newUsers };
+};
+
+const deleteUserInfo = (state, action) => {
+    return { ...state, users: state.users.filter(user => user.id !== action.id) };
+};
+
 const updateUserInfo = (state, action) => {
+    return { ...state, users: action.newUsers };
+};
+
+const updateUserPartial = (state, action) => {
     return { ...state, users: action.newUsers, currentUser: action.currentUser };
 };
 
@@ -39,8 +51,14 @@ const reducer = (state = initialState, action) => {
             return setAccounts(state, action);
         case actionTypes.GET_USERINFO:
             return getUserInfo(state, action);
+        case actionTypes.ADD_USERINFO:
+            return addUserInfo(state, action);
+        case actionTypes.DELETE_USERINFO:
+            return deleteUserInfo(state, action);
         case actionTypes.UPDATE_USERINFO:
             return updateUserInfo(state, action);
+        case actionTypes.UPDATE_USERPARTIAL:
+            return updateUserPartial(state, action);
         case actionTypes.ADD_ACCOUNTINFO:
             return addAccountInfo(state, action);
         case actionTypes.CHANGE_SEARCH_FIELD:

@@ -29,8 +29,12 @@ class EditUserInfo extends Component {
     }
 
     onFormChange = (e, { name, value }) => {
-        this.setState({ [name]: value }, ()=> this.props.getUpdatedUser(this.state));
-    };
+        if (name === "firstName" || name === "lastName") {
+            this.setState({ [name]: value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() }, () => this.props.getUpdatedUser(this.state));
+        } else {
+            this.setState({ [name]: value }, () => this.props.getUpdatedUser(this.state));
+        }
+    }
 
     render() {
         const deptOptions = [
@@ -44,7 +48,7 @@ class EditUserInfo extends Component {
             { key: 'member', text: 'Member', value: 3 }
         ];
         return (
-            
+
             <div>
                 <Form>
                     <Form.Group widths="equal">
@@ -66,10 +70,10 @@ class EditUserInfo extends Component {
                     {this.props.showFormNotice &&
                         <Form.Group widths="equal">
                             <Form.Field>
-                            {!this.state.firstName && <Label basic color="red" pointing>Please enter first name</Label>}
+                                {!this.state.firstName && <Label basic color="red" pointing>Please enter first name</Label>}
                             </Form.Field>
                             <Form.Field>
-                            {!this.state.lastName && <Label basic color="red" pointing>Please enter last name</Label>}
+                                {!this.state.lastName && <Label basic color="red" pointing>Please enter last name</Label>}
                             </Form.Field>
                         </Form.Group>
                     }
@@ -92,7 +96,7 @@ class EditUserInfo extends Component {
                         />
                     </Form.Group>
                     <h4>User Shifts</h4>
-                    <Shift editable userId={this.props.user.id} userShifts={this.state.userShifts} addShift={this.addShift} removeShift={this.removeShift}/>
+                    <Shift editable userId={this.props.user.id} userShifts={this.state.userShifts} addShift={this.addShift} removeShift={this.removeShift} />
                 </Form>
             </div>
         );

@@ -6,12 +6,20 @@ import TableRow from "../../components/Table/TableRow/TableRow";
 import ModalUI from "../../components/UI/ModalUI";
 import AddUserInfo from "../../components/UserInfo/AddUserInfo/AddUserInfo";
 import Footer from "../../components/Footer/Footer";
+import * as actions from "../../store/actions/index";
 import { checkValidity } from "../../shared/validation";
-import axios from "../../axios-api";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class StaffTable extends Component {
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.users !== prevState.data) {
+            return { data: nextProps.users };
+        } else {
+            return null;
+        }
+    }
+
     state = {
         selectedAccountId: {
             value: null,
@@ -108,58 +116,7 @@ class StaffTable extends Component {
             departmentId: this.state.selectedDept.value,
             positionId: this.state.selectedPos.value
         };
-        axios
-            .post("calendar/user", userInfo)
-            .then(response => {
-                this.setState({ data: response.data.value });
-                toast.info("User Added!!", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                });
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
-    deleteUserInfo = id => {
-        axios
-            .delete("calendar/user/" + id)
-            .then(response => {
-                this.setState({ data: this.state.data.filter(user => user.id !== id) });
-                toast.warn("User Deleted!!", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                });
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
-    editUserInfo = updatedUser => {
-        axios.put("calendar/user/" + updatedUser.userId, updatedUser)
-            .then(response => {
-                this.setState({ data: response.data.value });
-                toast.info("User info Updated!!", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true
-                });
-            }).catch(error => {
-                console.log(error);
-            });
+        this.props.onAddUserInfo(userInfo);
     }
 
     getUpdatedUser = (updatedUser) => {
@@ -236,7 +193,6 @@ class StaffTable extends Component {
             this.state.selectedDept.value && this.state.selectedPos.value;
         let editUserValid = this.state.updatedUser.firstName && this.state.updatedUser.lastName;
 
-
         let table = (
             <React.Fragment>
                 <Table sortable celled striped size="large" color="grey">
@@ -297,15 +253,16 @@ class StaffTable extends Component {
                         {filteredUsers.map(user => (
                             <TableRow
                                 key={user.id}
+                                accountId={this.props.accountId}
                                 user={user}
                                 isDisplay={isDisplay}
-                                deleteUserInfo={() => this.deleteUserInfo(user.id)}
+                                deleteUserInfo={() => this.props.onDeleteUserInfo(user.id)}
                                 onFormChange={this.onFormChange}
                                 getUpdatedUser={this.getUpdatedUser}
                                 editUserValid={editUserValid}
                                 showNotice={this.showNotice}
                                 showFormNotice={this.state.showFormNotice}
-                                editUserInfo={() => this.editUserInfo(this.state.updatedUser)}
+                                editUserInfo={() => this.props.onUpdateUserInfo(this.state.updatedUser)}
                                 reset={this.resetUserInfo}
                             />
                         ))}
@@ -313,8 +270,6 @@ class StaffTable extends Component {
                 </Table>
             </React.Fragment>
         );
-
-
         return (
             <div>
                 {table}
@@ -332,7 +287,15 @@ const mapStateToProps = state => {
     };
 };
 
+const mapDispatchToProps = dispatch => {
+    return {
+        onAddUserInfo: userInfo => dispatch(actions.addUserInfo(userInfo)),
+        onUpdateUserInfo: updatedUser => dispatch(actions.updateUserInfo(updatedUser)),
+        onDeleteUserInfo: id => dispatch(actions.deleteUserInfo(id))
+    };
+};
+
 export default connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
 )(StaffTable);

@@ -2,15 +2,24 @@ import React, { Component } from "react";
 import { Table, Message } from "semantic-ui-react";
 import LeaveTableRow from "./LeaveTableRow";
 import ModalUI from "../../components/UI/ModalUI";
-import ApplyLeave from './ApplyLeave';
+import ApplyLeave from "./ApplyLeave";
 
 class LeaveRequests extends Component {
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.leaves !== prevState.leaves) {
+            return { leaves: nextProps.leaves };
+        } else {
+            return null;
+        }
+    }
 
     state = {
         leavetype: 1,
         startDate: new Date(),
         endDate: new Date(),
-        updatedLeaveData: []
+        updatedLeaveData: [],
+        leaves:this.props.leaves
     };
 
     onStDateChange = (value) => {
@@ -81,7 +90,7 @@ class LeaveRequests extends Component {
                         </Table.Header>
 
                         <Table.Body>
-                            {this.props.leaves.map(leave =>
+                            {this.state.leaves.map(leave =>
                                 (<LeaveTableRow
                                     key={leave.leaveRequestId}
                                     leaveData={leave}
@@ -93,11 +102,11 @@ class LeaveRequests extends Component {
 
                         <Table.Footer fullWidth>
                             <Table.Row>
-                                <Table.HeaderCell colSpan='8'>
-                                    <ModalUI modalSize="small" header="Apply Leave" primary color='blue'
+                                <Table.HeaderCell colSpan="8">
+                                    <ModalUI modalSize="small" header="Apply Leave" primary color="blue"
                                         formvalid
-                                        category='Apply Leave'
-                                        floated='right'
+                                        category="Apply New Leave"
+                                        floated="right"
                                         addLeaveInfo={this.addLeaveInfo}
                                         reset={() => null}
                                     >

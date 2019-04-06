@@ -1,9 +1,5 @@
 import React from "react";
-import { Container, Grid, Segment, List, Header, Image } from "semantic-ui-react";
-import terry from "../../shared/Terry Wang.jpg";
-import rad from "../../shared/Radhika.jpg";
-import dan from "../../shared/Daniel.jpg";
-
+import { Container, Grid, Segment, List, Header } from "semantic-ui-react";
 
 const Footer = () => (
     <Segment vertical style={{
@@ -63,7 +59,7 @@ const Footer = () => (
                 </Grid.Row>
                 <Grid.Row style={{ color: "white" }}>
                     <Grid.Column width={16} >
-                        Copyright © 2019 Smart Team. All rights reserved.
+                        Copyright Â© 2019 Smart Team. All rights reserved.
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
