@@ -76,6 +76,7 @@ namespace Smart_Calendar.Application.Services
                 return new TokenResponseDto
                 {
                     Error = e.Message,
+                    Code = System.Net.HttpStatusCode.BadRequest
                 };
             }
 

@@ -52,12 +52,34 @@ export const auth = (email, password) => {
         };
         axios.post("Account/Login", authData)
             .then(response => {
-                localStorage.setItem("token", response.data.jwtToken);
-                localStorage.setItem("roleId", response.data.roleId.toString());
-                localStorage.setItem("accountId", response.data.accountId);
-                localStorage.setItem("email", email);
-                dispatch(authSuccess(response.data.jwtToken, response.data.roleId.toString(), response.data.accountId, email));
-                toast.info("Welcome!", {
+                if (response.status === 200) {
+                    localStorage.setItem("token", response.data.jwtToken);
+                    localStorage.setItem("roleId", response.data.roleId.toString());
+                    localStorage.setItem("accountId", response.data.accountId);
+                    localStorage.setItem("email", email);
+                    dispatch(authSuccess(response.data.jwtToken, response.data.roleId.toString(), response.data.accountId, email));
+                    toast.info("Welcome!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    });
+                } else {
+                    toast.error("Unauthorized", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true
+                    });
+                }
+               
+            })
+            .catch(err => {
+                toast.error("Auth failed", {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: true,
@@ -65,8 +87,6 @@ export const auth = (email, password) => {
                     pauseOnHover: true,
                     draggable: true
                 });
-            })
-            .catch(err => {
                 dispatch(authFail(err.toString()));
             });
     };

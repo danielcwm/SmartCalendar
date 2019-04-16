@@ -40,11 +40,11 @@ namespace Smart_Calendar.WebUI
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["appToken"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["AppToken"])),
                     RequireSignedTokens = true,
                     ValidateLifetime = true,
                     ValidateIssuer = true,
-                    ValidIssuer = "http://localhost:44314/",
+                    ValidIssuer = "http://ec2-13-238-195-236.ap-southeast-2.compute.amazonaws.com/",
                     ValidateAudience = false,
                     SaveSigninToken = true
                 };

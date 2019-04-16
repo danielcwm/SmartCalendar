@@ -25,16 +25,24 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginDto credential)
         {
-            var result = await _IdentityService.LoginAsync(credential);
-            var code = result.Code;
-            if (code == System.Net.HttpStatusCode.OK)
+            try
             {
-                return Ok(new { jwtToken = result.Token, result.RoleId, result.AccountId });
+                var result = await _IdentityService.LoginAsync(credential);
+                var code = result.Code;
+                if (code == System.Net.HttpStatusCode.OK)
+                {
+                    return Ok(new { jwtToken = result.Token, result.RoleId, result.AccountId });
+                }
+                else
+                {
+                    return Unauthorized(new { Message = result.Error });
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                return Unauthorized();
+                return BadRequest(new { e.Message });
             }
+
         }
 
         [HttpPost("register")]
@@ -50,7 +58,7 @@ namespace Smart_Calendar.WebUI.Controllers
                     var allAccount = await _accountRepo.GetAllAsync();
                     return Ok(allAccount);
                 }
-                return BadRequest(new { message = string.Format("Register failed:: {0}" , result.Error)});
+                return BadRequest(new { message = string.Format("Register failed:: {0}", result.Error) });
             }
             else
             {

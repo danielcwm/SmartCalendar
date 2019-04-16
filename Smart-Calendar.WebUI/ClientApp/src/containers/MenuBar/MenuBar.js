@@ -205,7 +205,7 @@ class Menubar extends Component {
                     </Menu.Item>
                 </Menu>
 
-                <Menu size="small" borderless stackable style={{ background: "rgba(45, 45, 45, 0.98)" }}>
+                <Menu size="small" borderless stackable style={{ background: "rgba(47, 48, 47, 0.83)", width: "100%", borderRadius: "unset" }}>
                     <Menu.Item style={{ color: "white", fontSize: "1.3em" }}>
                         Current Week: {currentWeek}
                     </Menu.Item>
