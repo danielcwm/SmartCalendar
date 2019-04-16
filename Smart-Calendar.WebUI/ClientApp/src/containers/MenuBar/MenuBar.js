@@ -72,7 +72,8 @@ class Menubar extends Component {
             },
             showFormNotice: false
         }, () => {
-            if (!this.props.accounts.every(account => account.email !== this.state.email.value)) {
+                if (!
+                    (account => account.email !== this.state.email.value)) {
                 this.setState({ duplicatedEmail: true });
             } else {
                 this.setState({ duplicatedEmail: false });

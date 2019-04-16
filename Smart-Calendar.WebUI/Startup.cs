@@ -71,7 +71,6 @@ namespace Smart_Calendar.WebUI
                 app.UseHsts();
             }
             app.UseCors(x => x.AllowAnyHeader().AllowAnyOrigin().AllowCredentials().AllowAnyMethod());
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
