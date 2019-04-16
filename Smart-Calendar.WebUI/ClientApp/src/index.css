@@ -12,7 +12,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Open Sans", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: url("containers/Welcome/images/background.jpg") no-repeat;
+    background: url("containers/Welcome/images/background2.jpg");
     background-size: 100%;
 }
 
@@ -40,7 +40,7 @@ span:hover {
     /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
     body {
         padding-top: 50px;
-        background: url("containers/Welcome/images/background.jpg") repeat;
+        background: url("containers/Welcome/images/background2.jpg") repeat;
     }
 
     #lfooter {

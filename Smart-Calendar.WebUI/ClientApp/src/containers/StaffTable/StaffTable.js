@@ -272,8 +272,7 @@ class StaffTable extends Component {
         );
         return (
             <div>
-                {table}
-                <Footer />
+                {table}       
             </div>);
     }
 }

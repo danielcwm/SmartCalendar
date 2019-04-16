@@ -6,6 +6,7 @@ import ModalUI from "../../components/UI/ModalUI";
 import LandingFooter from "../../components/Footer/LandingFooter";
 import * as actions from "../../store/actions/index";
 import { checkValidity } from "../../shared/validation";
+import Footer from "../../components/Footer/Footer";
 
 class Welcome extends Component {
     state = {
@@ -243,7 +244,7 @@ class Welcome extends Component {
                         }
                     </Container>
                     <Divider hidden />
-                    <LandingFooter />
+                    {this.props.isAuthenticated ? <Footer />: <LandingFooter />}
                 </div>
             </React.Fragment>
         );

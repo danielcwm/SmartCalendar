@@ -5,6 +5,7 @@ import SmartCalendar from "./containers/SmartCalendar/SmartCalendar";
 import Welcome from './containers/Welcome/Welcome';
 import * as actions from "./store/actions/index";
 import { ToastContainer } from "react-toastify";
+import Footer from "./components/Footer/Footer";
 
 class App extends Component {
     componentDidMount() {
@@ -32,6 +33,7 @@ class App extends Component {
             <div>
                 {routes}
                 <ToastContainer />
+                <Footer />
             </div>
           
         );

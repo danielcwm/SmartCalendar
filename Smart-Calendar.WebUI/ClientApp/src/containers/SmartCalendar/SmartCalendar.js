@@ -4,7 +4,6 @@ import { Divider, Container, Loader, Message } from "semantic-ui-react";
 import Menubar from "../MenuBar/MenuBar";
 import StaffTable from "../StaffTable/StaffTable";
 import * as actions from "../../store/actions/index";
-
 class SmartCalender extends Component {
     componentDidMount() {
         this.props.onInitUsers();
@@ -16,18 +15,19 @@ class SmartCalender extends Component {
         return (
             <React.Fragment>
                 {this.props.users && this.props.accounts ? 
-                    <div style={{height:"100vh"}}>
+                    <div  style={{ height: "95vh" }}>
                         <Menubar />
                         <Divider hidden />
-                        <Container>
-                            {!this.props.currentUser && <Message attached warning size="big" >
+                        <Container >
+                            {!this.props.currentUser && <Message attached warning  >
                                 <Message.Header>Account not activated!</Message.Header>
                                 <p>Please inform admin to activate your account.</p>
                             </Message>}
                             <StaffTable users={this.props.users} />
                         </Container>
+                        
                     </div>
-                    : <Loader active inline="centered" size="massive" />}
+                    : <Loader style={{ height: "100%", paddingTop: "10%" }} active inline="centered" size="massive" />}
             </React.Fragment >
         );
     }

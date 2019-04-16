@@ -5,8 +5,10 @@ const SearchBox = props => {
     return (
         <React.Fragment>
             <Input
+                inverted
+                transparent
+                size='huge' 
                 icon="search"
-                size="small"
                 iconPosition="left"
                 placeholder="Search Employee..."
                 onChange={props.searchChange}

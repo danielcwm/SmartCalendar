@@ -7,12 +7,9 @@ import dan from "../../shared/Daniel.jpg";
 
 const Footer = () => (
     <Segment vertical style={{
-        position: "absolute",
-        right: 0,
-        left: 0,
-        padding: "1em",
-        marginTop: "1em",
-        background: "rgba(45, 45, 45, 0.98)"
+        bottom:0,
+        padding: "3%",
+        background: "rgba(29, 29, 29, 0.92)"
     }}
     >
         <Container>

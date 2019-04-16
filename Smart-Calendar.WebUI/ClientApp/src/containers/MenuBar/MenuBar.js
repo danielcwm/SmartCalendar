@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
-import { Menu, Icon, Header, Button, Dropdown } from "semantic-ui-react";
+import { Menu, Icon, Header, Button, Dropdown, Grid, Statistic } from "semantic-ui-react";
 import ModalUI from "../../components/UI/ModalUI";
 import SearchBox from "../../components/Search/SearchBox";
 import AddAccount from "../../components/UserInfo/AddAccount/AddAccount";
@@ -72,8 +72,8 @@ class Menubar extends Component {
             },
             showFormNotice: false
         }, () => {
-                if (!
-                    (account => account.email !== this.state.email.value)) {
+            if (!
+                (account => account.email !== this.state.email.value)) {
                 this.setState({ duplicatedEmail: true });
             } else {
                 this.setState({ duplicatedEmail: false });
@@ -191,79 +191,85 @@ class Menubar extends Component {
         return (
             <React.Fragment>
                 {!this.props.isAuthenticated && <Redirect to={this.props.authRedirectPath} />}
-                <Menu secondary stackable>
-                    <Menu.Item >
-                        <Header as="h1" size="large">
-                            <Icon name="calendar alternate outline" />
-                            <Header.Content>
-                                Smart Calendar
-                            </Header.Content>
-                        </Header>
-                    </Menu.Item>
-                    <Menu.Item position="right" style={{ "letterSpacing": "0.2em" }}>
-                        THE NEXT GENERATION EMPLOYEE MANAGEMENT SYSTEM
-                    </Menu.Item>
-                </Menu>
+                <Grid style={{ backgroundColor: "rgba(167, 5, 5, 0.77)" }}>
+                    <Grid.Column width={5}>
+                        <div style={{
+                            display: "inline-flex",
+                            width: "100 %",
+                            padding: "2% 0 0 2%"
+                        }}>
+                            <Icon name="calendar alternate outline" size='big' style={{ color: "whitesmoke"}} />
+                            <Statistic size='small' inverted>
+                                <Statistic.Value> {currentWeek}</Statistic.Value>
+                                <Statistic.Label>Week</Statistic.Label>
+                            </Statistic>
+                            <h4 style={{ color: "whitesmoke", padding: "3% 2%", width: "198px" }}>{today}</h4></div>
+                    </Grid.Column>
 
-                <Menu size="small" borderless stackable style={{ background: "rgba(47, 48, 47, 0.83)", width: "100%", borderRadius: "unset" }}>
-                    <Menu.Item style={{ color: "white", fontSize: "1.3em" }}>
-                        Current Week: {currentWeek}
-                    </Menu.Item>
-                    <Menu.Item style={{ color: "white", fontSize: "1.3em" }}>
-                        {today}
-                    </Menu.Item>
-                    <Menu.Item position="right">
-                        <SearchBox searchChange={this.props.onSearchChange} />
-                    </Menu.Item>
-                    <Menu.Item>
-                        {isDisplay && <ModalUI icon="add user" circular inverted animated header="Create Account" category="Create Account" addAccount={this.addAccount} formvalid={addAccountValid} showNotice={this.showNotice} reset={this.resetState}>
-                            <AddAccount onFormChange={this.handleFormChange} formControls={this.state} />
-                        </ModalUI>
-                        }
+                    <Grid.Column width={11} style={{
+                        display: "inline-flex",
+                        width: "100 %",
+                        padding: "2% 2% 0 0"
+                    }}>
+                        <Menu secondary stackable fluid >
 
-                        <ModalUI icon="plane" modalSize="large" circular inverted animated header="Leave Request List" category="Leave Requests" updateLeaveInfo={this.handleUpdateLeave} reset={() => null} formvalid>
-                            <LeaveRequests leaves={leaves}
-                                currentUser={this.props.currentUser}
-                                deleteLeave={this.deleteLeaveInfo}
-                                addNewLeave={this.addNewLeave}
-                                updateLeaveInfo={this.updateLeaveInfo}
-                                isDisplay={isDisplay}
-                            />
-                        </ModalUI>
+                            <Menu.Item >
+                                <SearchBox searchChange={this.props.onSearchChange} />
+                            </Menu.Item>
+                            <Menu.Item position="right">
+                                <ModalUI size="small" icon="plane" modalSize="large" inverted animated header="Leave Request List" category="Leave Requests" updateLeaveInfo={this.handleUpdateLeave} reset={() => null} formvalid>
+                                    <LeaveRequests leaves={leaves}
+                                        currentUser={this.props.currentUser}
+                                        deleteLeave={this.deleteLeaveInfo}
+                                        addNewLeave={this.addNewLeave}
+                                        updateLeaveInfo={this.updateLeaveInfo}
+                                        isDisplay={isDisplay}
+                                    />
+                                </ModalUI>
 
-                        <Dropdown floating icon={null} trigger={
-                            <Button animated="vertical" circular inverted size="small">
-                                <Button.Content visible>
-                                    Personal Info
+                            </Menu.Item>
+                            <Menu.Item>
+                                {isDisplay && <ModalUI icon="add user" circular inverted animated header="Create Account" category="Create Account" addAccount={this.addAccount} formvalid={addAccountValid} showNotice={this.showNotice} reset={this.resetState}>
+                                    <AddAccount onFormChange={this.handleFormChange} formControls={this.state} />
+                                </ModalUI>
+                                }
+
+                                <Dropdown floating icon={null} trigger={
+                                    <Button animated="vertical" inverted size="small">
+                                        <Button.Content visible>
+                                            Personal Info
                                 </Button.Content>
-                                <Button.Content hidden>
-                                    <Icon name="settings" />
-                                </Button.Content>
-                            </Button>
-                        }
-                        >
-                            <Dropdown.Menu style={{ left: "auto", right: 0, fontSize: "1.3em" }}>
-                                <Dropdown.Header icon="user" content={this.props.accountEmail} />
-                                <Dropdown.Divider />
-                                <Dropdown.Item>
-                                     <ModalUI trigger="category" modalSize="tiny" header="Personal Profile" category="Profile" formvalid personalProfile={() => null} reset={() => null}>
-                                        <EditProfile />
-                                    </ModalUI>
-                                </Dropdown.Item>
-                                <Dropdown.Item>
-                                    <ModalUI trigger="category" modalSize="tiny" header="Account Settings" category="Account Settings" accountSettings={() => this.props.onUpdateUserInfo(this.state.updatedUser)} formvalid={accountSettingValid} showNotice={this.showNotice} reset={this.resetState}>
-                                        <AccountSettings currentUser={this.props.currentUser} accountEmail={this.props.accountEmail} getUpdatedUser={this.getUpdatedUser} showFormNotice={this.state.showFormNotice} />
-                                    </ModalUI>
-                                </Dropdown.Item>
-                                <Dropdown.Item>
-                                    <ModalUI trigger="category" modalSize="tiny" header="Sign Out" category="Sign Out" signout={() => this.props.onSignout()} reset={() => this.resetState()} formvalid>
-                                        <h3>Do you want to sign out?</h3>
-                                    </ModalUI>
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </Menu.Item>
-                </Menu>
+                                        <Button.Content hidden>
+                                            <Icon name="settings" />
+                                        </Button.Content>
+                                    </Button>
+                                }
+                                >
+                                    <Dropdown.Menu style={{ left: "auto", right: 0 }}>
+                                        <Dropdown.Header icon="user" content={this.props.accountEmail} />
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item>
+                                            <ModalUI trigger="category" modalSize="tiny" header="Personal Profile" category="Profile" formvalid personalProfile={() => null} reset={() => null}>
+                                                <EditProfile />
+                                            </ModalUI>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item>
+                                            <ModalUI trigger="category" modalSize="tiny" header="Account Settings" category="Account Settings" accountSettings={() => this.props.onUpdateUserInfo(this.state.updatedUser)} formvalid={accountSettingValid} showNotice={this.showNotice} reset={this.resetState}>
+                                                <AccountSettings currentUser={this.props.currentUser} accountEmail={this.props.accountEmail} getUpdatedUser={this.getUpdatedUser} showFormNotice={this.state.showFormNotice} />
+                                            </ModalUI>
+                                        </Dropdown.Item>
+                                        <Dropdown.Item>
+                                            <ModalUI trigger="category" modalSize="tiny" header="Sign Out" category="Sign Out" signout={() => this.props.onSignout()} reset={() => this.resetState()} formvalid>
+                                                <h3>Do you want to sign out?</h3>
+                                            </ModalUI>
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Menu.Item>  </Menu></Grid.Column>
+                </Grid>
+
+
+
 
             </React.Fragment>
         );
