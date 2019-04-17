@@ -9,7 +9,6 @@ const Footer = () => (
     <Segment vertical style={{
         position: "absolute",
         right: 0,
-        //bottom: 0,
         left: 0,
         padding: "1em",
         marginTop: "1em",

@@ -2,16 +2,7 @@ import React from "react";
 import { Container, Grid, Segment, List, Header } from "semantic-ui-react";
 
 const Footer = () => (
-    <Segment vertical style={{
-        position: "absolute",
-        right: 0,
-        bottom: 0,
-        left: 0,
-        padding: "1em",
-        marginTop: "2em",
-        background: "rgba(45, 45, 45, 0.98)"
-    }}
-    >
+    <Segment vertical id="lfooter">
         <Container>
             <Grid divided stackable>
                 <Grid.Row>

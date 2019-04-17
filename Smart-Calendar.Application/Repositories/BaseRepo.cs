@@ -33,19 +33,26 @@ namespace Smart_Calendar.Application.Repositories
             _dbContext.Set<TEntity>().RemoveRange(entity);
             return await _dbContext.SaveChangesAsync() > 0;
         }
-        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+
+        public async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().Where(predicate).AsQueryable();
+            var entities = await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+
+            return entities;
         }
+
         public async Task<List<TEntity>> GetAllAsync()
         {
             return await _dbContext.Set<TEntity>().ToListAsync();
         }
+
         public async Task<IQueryable<TEntity>> GetAllAsync(params Expression<Func<TEntity, object>>[] includes)
         {
-           return includes.Aggregate(_dbContext.Set<TEntity>().AsQueryable(),
-                          (current, include) => current.Include(include));
+            return includes.Aggregate(_dbContext.Set<TEntity>().AsQueryable(),
+                           (current, include) => current.Include(include));
+
         }
+
         public async Task<bool> UpdateAsync(TEntity entity)
         {
             try

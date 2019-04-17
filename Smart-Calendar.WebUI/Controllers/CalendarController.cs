@@ -8,8 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Smart_Calendar.Domain.Enum;
 
-
-
 namespace Smart_Calendar.WebUI.Controllers
 {
     [Route("api/[controller]")]
@@ -17,14 +15,25 @@ namespace Smart_Calendar.WebUI.Controllers
     public class CalendarController : ControllerBase
     {
         private readonly IBaseRepo<User> _userRepo;
+        private readonly IBaseRepo<Department> _departmentRepo;
+        private readonly IBaseRepo<Position> _positionRepo;
         private readonly IBaseRepo<UserShift> _userShiftRepo;
         private readonly IBaseRepo<Shift> _shiftRepo;
         private readonly IBaseRepo<Account> _accountRepo;
         private readonly IBaseRepo<LeaveRequest> _leaveReqRepo;
 
-        public CalendarController(IBaseRepo<User> userRepo, IBaseRepo<UserShift> userShiftRepo, IBaseRepo<Shift> shiftRepo, IBaseRepo<Account> accountRepo, IBaseRepo<LeaveRequest> leavereqRepo)
+        public CalendarController(
+            IBaseRepo<User> userRepo,
+            IBaseRepo<Department> departmentRepo,
+            IBaseRepo<Position> positionRepo,
+            IBaseRepo<UserShift> userShiftRepo, 
+            IBaseRepo<Shift> shiftRepo, 
+            IBaseRepo<Account> accountRepo, 
+            IBaseRepo<LeaveRequest> leavereqRepo)
         {
             _userRepo = userRepo;
+            _departmentRepo = departmentRepo;
+            _positionRepo = positionRepo;
             _userShiftRepo = userShiftRepo;
             _shiftRepo = shiftRepo;
             _accountRepo = accountRepo;
@@ -34,17 +43,19 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetUserList()
         {
-            var results = await _userRepo.GetAllAsync(c => c.Department, c => c.Position, c => c.Account, c => c.UserShift);
-
+            var results = await _userRepo.GetAllAsync();
             var userList = new List<UserVM>();
+            foreach (var user in results) {
+                var deptResults = await _departmentRepo.GetAsync(d => d.DepartmentId == user.DepartmentId);
+                var posResults = await _positionRepo.GetAsync(p => p.PositionId == user.PositionId);
+                var accountResults = await _accountRepo.GetAsync(a => a.AccountId == user.AccountId);
 
-            foreach (var user in results)
-            {
-                var userShiftResults = _userShiftRepo.Get(u => u.UserId == user.UserId);
+                var userShiftResults = await _userShiftRepo.GetAsync(u => u.UserId == user.UserId);
                 var userShifts = new List<UserShiftVM>();
                 foreach (var userShift in userShiftResults)
                 {
-                    Shift shiftResult = _shiftRepo.Get(s => s.ShiftId == userShift.ShiftId).FirstOrDefault();
+                    var shiftResults = await _shiftRepo.GetAsync(s => s.ShiftId == userShift.ShiftId);
+                    var shiftResult = shiftResults.FirstOrDefault();
                     var shift = new ShiftVM { ShiftId = shiftResult.ShiftId, TimeSlot = shiftResult.TimeSlot };
                     userShifts.Add(new UserShiftVM { UserShiftId = userShift.UserShiftId, UserId = userShift.UserId, Day = userShift.Day, ShiftId = userShift.ShiftId, Shift = shift });
                 }
@@ -52,16 +63,17 @@ namespace Smart_Calendar.WebUI.Controllers
                 {
                     Id = user.UserId,
                     AccountId = user.AccountId,
-                    Email = user.Account.Email,
+                    Email = accountResults.FirstOrDefault().Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Gender = user.Gender,
                     DepartmentId = user.DepartmentId,
-                    Department = user.Department.Name,
+                    Department = deptResults.FirstOrDefault().Name,
                     PositionId = user.PositionId,
-                    Position = user.Position.Name,
+                    Position = posResults.FirstOrDefault().Name,
                     UserShifts = userShifts
                 });
+
             }
             return Ok(userList);
         }
@@ -69,15 +81,10 @@ namespace Smart_Calendar.WebUI.Controllers
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetUserInfo(Guid id)
         {
-            var user = _userRepo.Get(d => d.AccountId == id).SingleOrDefault();
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
+            List<User> users = await _userRepo.GetAsync(d => d.AccountId == id);
+            var user = users.FirstOrDefault();
             return Ok(user);
         }
-
-
 
         [HttpPost("User")]
         public async Task<IActionResult> AddUserInfo([FromBody]User user)
@@ -120,8 +127,6 @@ namespace Smart_Calendar.WebUI.Controllers
             }
             return Ok(await GetUserList());
         }
-
-
 
         [HttpPut("UserPartial/{userId}")]
         public async Task<IActionResult> UpdateUserPartial([FromBody]UpdateUserPartialDto updatedUser)
@@ -184,7 +189,6 @@ namespace Smart_Calendar.WebUI.Controllers
                 {
                     LeaveRequestId = leaveinfo.LeaveRequestId,
                     UserName = leaveinfo.FirstName,
-                    //DepartmentId = leaveinfo.de
                     Dept = leaveinfo.Name,
                     Leavetype = leaveinfo.LeaveType,
                     LeaveCategoryId = leaveinfo.LeaveCategoryId,

@@ -21,35 +21,48 @@ namespace Smart_Calendar.WebUI.Controllers
             _accountRepo = accountRepo;
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto credential)
+        public async Task<IActionResult> Login([FromBody]LoginDto credential)
         {
-            var result = await _IdentityService.LoginAsync(credential);
-            if (result.Code == System.Net.HttpStatusCode.Unauthorized)
-                return Unauthorized();
+            try
+            {
+                var result = await _IdentityService.LoginAsync(credential);
+                var code = result.Code;
+                if (code == System.Net.HttpStatusCode.OK)
+                {
+                    return Ok(new { jwtToken = result.Token, result.RoleId, result.AccountId });
+                }
+                else
+                {
+                    return Unauthorized(new { Message = result.Error });
+                }
+            }
+            catch (System.Exception e)
+            {
+                return BadRequest(new { e.Message });
+            }
 
-            return Ok(new { jwtToken = result.Token, result.RoleId, result.AccountId });
-            
         }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterDto regsiterDto)
         {
-            var email = regsiterDto.Email;
             var accounts = await _accountRepo.GetAllAsync();
             var res = accounts.FirstOrDefault(a => a.Email == regsiterDto.Email);
-            if(res == null){
-                await _IdentityService.CreateAccountAsync(regsiterDto);
-                return Ok(await _accountRepo.GetAllAsync());
+            if (res == null)
+            {
+                var result = await _IdentityService.CreateAccountAsync(regsiterDto);
+                if (result != null)
+                {
+                    var allAccount = await _accountRepo.GetAllAsync();
+                    return Ok(allAccount);
+                }
+                return BadRequest(new { message = string.Format("Register failed:: {0}", result.Error)});
             }
             else
             {
                 return Unauthorized();
             }
-            
-            //return NotFound();
 
-           
-            //return Ok(new { jwtToken = result.Token });
-           
         }
     }
 }

@@ -18,11 +18,6 @@ namespace Smart_Calendar.Application.Helper.JWT
         }
         public string GenerateToken(string email)
         {
-            var basePath = Directory.GetCurrentDirectory();
-            var configuration = new ConfigurationBuilder()
-            .SetBasePath(basePath + "\\..\\Smart-Calendar.WebUI")
-            .AddJsonFile("appsettings.json")
-            .Build();
             //generate token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config["AppToken"]);

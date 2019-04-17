@@ -19,42 +19,69 @@ namespace Smart_Calendar.Application.Services
         }
         public async Task<TokenResponseDto> CreateAccountAsync(RegisterDto registerDto)
         {
-            PasswordHashing(out byte[] hash, out byte[] salt, registerDto.Password);
-            Account account = new Account
+            try
             {
-                Email = registerDto.Email,
-                RoleId = (int)registerDto.RoleId,
-                PasswordHash = hash,
-                PasswordSalt = salt
-            };
-            await _accountRepo.CreateAsync(account);
-            return new TokenResponseDto
+                PasswordHashing(out byte[] hash, out byte[] salt, registerDto.Password);
+                Account account = new Account
+                {
+                    Email = registerDto.Email,
+                    RoleId = (int)registerDto.RoleId,
+                    PasswordHash = hash,
+                    PasswordSalt = salt
+                };
+                await _accountRepo.CreateAsync(account);
+                return new TokenResponseDto
+                {
+                    Token = _jwtHelper.GenerateToken(registerDto.Email),
+                    Code = System.Net.HttpStatusCode.OK
+                };
+            }
+            catch (System.Exception e)
             {
-                Token = _jwtHelper.GenerateToken(registerDto.Email),
-                Code = System.Net.HttpStatusCode.OK
-            };
+
+                return new TokenResponseDto
+                {
+                    Error = e.Message,
+                };
+            }
+          
         }
         public async Task<TokenResponseDto> LoginAsync(LoginDto credential)
         {
-            var user = _accountRepo.Get(a => a.Email == credential.Email).SingleOrDefault();
-            if (user == null)
+            try
             {
-                return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
+                var accounts = await _accountRepo.GetAsync(a => a.Email == credential.Email);
+                var account = accounts.FirstOrDefault();
+                if (account == null)
+                {
+                    return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
+                }
+
+                if (!VerifyPasswordHash(account.PasswordHash, account.PasswordSalt, credential.Password))
+                {
+                    return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
+                }
+
+                return new TokenResponseDto
+                {
+                    Token = _jwtHelper.GenerateToken(credential.Email),
+                    Code = System.Net.HttpStatusCode.OK,
+                    RoleId = account.RoleId,
+                    AccountId = account.AccountId
+                };
+            }
+            catch (System.Exception e)
+            {
+
+                return new TokenResponseDto
+                {
+                    Error = e.Message,
+                    Code = System.Net.HttpStatusCode.BadRequest
+                };
             }
 
-            if (!VerifyPasswordHash(user.PasswordHash, user.PasswordSalt, credential.Password))
-            {
-                return new TokenResponseDto { Code = System.Net.HttpStatusCode.Unauthorized };
-            }
-
-            return new TokenResponseDto
-            {
-                Token = _jwtHelper.GenerateToken(credential.Email),
-                Code = System.Net.HttpStatusCode.OK,
-                RoleId = user.RoleId,
-                AccountId = user.AccountId
-            };
         }
+
         private bool VerifyPasswordHash(byte[] hash, byte[] salt, string password)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512(salt))

@@ -12,5 +12,6 @@ namespace Smart_Calendar.Application.Dtos
         public HttpStatusCode Code { get; set; }
         public int RoleId { get; set; }
         public Guid AccountId { get; set; }
+        public string Error { get; set; }
     }
 }

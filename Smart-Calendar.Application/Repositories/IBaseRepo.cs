@@ -10,7 +10,7 @@ namespace Smart_Calendar.Application.Repositories
     {
         Task<List<TEntity>> GetAllAsync();
 
-        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task CreateAsync(TEntity entity);
 
